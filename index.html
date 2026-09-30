@@ -1,0 +1,3250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart AI-Powered Ceramic Water Purification System | Ultimate IoT & TinyML Prototype</title>
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&family=Mukta+Malar:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Chart.js for High-Precision Telemetry & Radar Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #04070f;
+      --bg-card: rgba(11, 19, 36, 0.82);
+      --bg-card-hover: rgba(18, 30, 54, 0.9);
+      --border-card: rgba(56, 189, 248, 0.16);
+      --border-glow: rgba(56, 189, 248, 0.45);
+      
+      --cyan: #00f2fe;
+      --blue: #38bdf8;
+      --emerald: #10b981;
+      --terracotta: #e07a5f;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --purple: #8b5cf6;
+      --clay-gold: #d97706;
+      
+      --text-white: #ffffff;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --font-title: 'Outfit', sans-serif;
+      --font-ui: 'Space Grotesk', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+      --font-ta: 'Mukta Malar', sans-serif;
+      
+      --glow-cyan: 0 0 35px rgba(0, 242, 254, 0.32);
+      --glow-emerald: 0 0 35px rgba(16, 185, 129, 0.32);
+      --glow-terracotta: 0 0 35px rgba(224, 122, 95, 0.35);
+      --glow-rose: 0 0 35px rgba(244, 63, 94, 0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(14, 116, 144, 0.25) 0px, transparent 40%),
+        radial-gradient(at 100% 0%, rgba(224, 122, 95, 0.18) 0px, transparent 40%),
+        radial-gradient(at 50% 50%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 80% 100%, rgba(16, 185, 129, 0.18) 0px, transparent 45%),
+        linear-gradient(180deg, #03060c 0%, #080e1a 50%, #03050a 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Ambient cyber grid */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 45px 45px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #04070f; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.25); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+    .glass-box {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-card);
+      border-radius: 24px;
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.55);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .glass-box:hover {
+      border-color: var(--border-glow);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 25px rgba(56, 189, 248, 0.12);
+    }
+
+    .glass-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    }
+
+    .container {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 20px 24px 70px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ==========================================================
+       1. HEADER & GLOBAL CONTROLS
+       ========================================================== */
+    header.main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 28px;
+      margin-bottom: 22px;
+      background: rgba(11, 19, 36, 0.92);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 26px;
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6), var(--glow-cyan);
+    }
+
+    .branding-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .logo-badge {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #0284c7 0%, #0d9488 45%, #e07a5f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.55);
+      animation: emblemPulse 4s infinite alternate;
+      cursor: pointer;
+    }
+
+    .logo-badge i { font-size: 30px; color: #fff; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
+
+    .title-area h1 {
+      font-family: var(--font-title);
+      font-size: 1.65rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #6ee7b7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2px;
+    }
+
+    .title-area .sub-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      flex-wrap: wrap;
+    }
+
+    .chip-badge {
+      padding: 2px 10px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-family: var(--font-code);
+    }
+
+    .chip-badge.clay { background: rgba(224, 122, 95, 0.22); color: #ff9e80; border: 1px solid rgba(224, 122, 95, 0.45); }
+    .chip-badge.ai { background: rgba(139, 92, 246, 0.22); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.45); }
+    .chip-badge.iot { background: rgba(0, 242, 254, 0.18); color: var(--cyan); border: 1px solid rgba(0, 242, 254, 0.4); }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-dock {
+      background: rgba(30, 41, 59, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-dock:hover {
+      background: rgba(56, 189, 248, 0.22);
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-dock.active {
+      background: var(--cyan);
+      color: #04070f;
+      border-color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .status-pill-live {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(16, 185, 129, 0.14);
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #34d399;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
+    }
+
+    .pulse-core {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--emerald);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseEmerald 1.8s infinite;
+    }
+
+    .pulse-core.warning { background-color: var(--amber); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); animation: pulseAmber 1.8s infinite; }
+    .pulse-core.danger { background-color: var(--rose); box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); animation: pulseRose 1.8s infinite; }
+
+    /* TOP LIVE TELEMETRY BAR */
+    .telemetry-banner {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card-mini {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon-circ {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .stat-icon-circ.water { background: rgba(56, 189, 248, 0.18); color: var(--cyan); }
+    .stat-icon-circ.pot { background: rgba(224, 122, 95, 0.22); color: var(--terracotta); }
+    .stat-icon-circ.flow { background: rgba(16, 185, 129, 0.2); color: var(--emerald); }
+    .stat-icon-circ.valve { background: rgba(245, 158, 11, 0.2); color: var(--amber); }
+    .stat-icon-circ.solar { background: rgba(234, 179, 8, 0.2); color: #facc15; }
+    .stat-icon-circ.ai { background: rgba(139, 92, 246, 0.22); color: var(--purple); }
+
+    .stat-data-col .val {
+      font-family: var(--font-title);
+      font-size: 1.28rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.1;
+    }
+
+    .stat-data-col .lbl {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
+    }
+
+    /* ==========================================================
+       2. INTERACTIVE 3D/EXPLODED PHYSICAL SYSTEM & 4-STAGE FLOW
+       ========================================================== */
+    .headline-row {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .headline-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .headline-left i { color: var(--cyan); }
+
+    .purification-hero-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1.85fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    /* PHYSICAL POT 2D / EXPLODED CUTAWAY */
+    .pot-exploded-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(180deg, rgba(17, 26, 46, 0.88) 0%, rgba(9, 15, 28, 0.95) 100%);
+      border: 1px solid rgba(224, 122, 95, 0.35);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.6), var(--glow-terracotta);
+    }
+
+    .pot-view-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .view-btn {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-family: var(--font-code);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .view-btn.active, .view-btn:hover {
+      background: var(--terracotta);
+      color: #fff;
+      border-color: var(--terracotta);
+    }
+
+    .pot-svg-stage {
+      position: relative;
+      width: 100%;
+      height: 310px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pot-svg-canvas {
+      width: 100%;
+      height: 100%;
+      transition: all 0.5s ease;
+    }
+
+    @keyframes dropFall {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      80% { transform: translateY(58px) scale(0.9); opacity: 1; }
+      100% { transform: translateY(68px) scale(1.4); opacity: 0; }
+    }
+
+    .drip-p1 { animation: dropFall 1.3s infinite cubic-bezier(0.55, 0.055, 0.675, 0.19); }
+    .drip-p2 { animation: dropFall 1.5s infinite 0.5s cubic-bezier(0.55, 0.055, 0.675, 0.19); }
+
+    .pot-footer-badges {
+      display: flex;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 10px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.74rem;
+      font-family: var(--font-code);
+    }
+
+    .pot-badge-dot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot-col { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* 4-STAGE INTERACTIVE WORKFLOW CANVAS */
+    .flow-workflow-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .flow-canvas-container {
+      position: relative;
+      width: 100%;
+      min-height: 250px;
+      background: radial-gradient(ellipse at center, rgba(14, 116, 144, 0.16) 0%, rgba(6, 11, 22, 0.75) 80%);
+      border-radius: 18px;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      padding: 18px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    #waterFlowCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .stage-boxes-flex {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 8px;
+    }
+
+    .stage-item-card {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 18px;
+      padding: 16px 10px;
+      text-align: center;
+      position: relative;
+      transition: all 0.35s ease;
+      cursor: pointer;
+    }
+
+    .stage-item-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--cyan);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 242, 254, 0.3);
+    }
+
+    .stage-item-card.s-raw { border-color: rgba(245, 158, 11, 0.35); background: linear-gradient(180deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.95) 100%); }
+    .stage-item-card.s-ceramic { border-color: rgba(224, 122, 95, 0.45); background: linear-gradient(180deg, rgba(224, 122, 95, 0.14) 0%, rgba(15, 23, 42, 0.95) 100%); }
+    .stage-item-card.s-carbon { border-color: rgba(139, 92, 246, 0.45); background: linear-gradient(180deg, rgba(139, 92, 246, 0.14) 0%, rgba(15, 23, 42, 0.95) 100%); }
+    .stage-item-card.s-clean { border-color: rgba(16, 185, 129, 0.45); background: linear-gradient(180deg, rgba(16, 185, 129, 0.14) 0%, rgba(15, 23, 42, 0.95) 100%); }
+
+    .stage-circ-num {
+      position: absolute;
+      top: -10px; left: 50%;
+      transform: translateX(-50%);
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: #1e293b;
+      border: 1px solid var(--cyan);
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-code);
+    }
+
+    .stage-avatar {
+      width: 46px; height: 46px;
+      margin: 4px auto 8px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+    }
+
+    .s-raw .stage-avatar { background: rgba(245, 158, 11, 0.2); color: var(--amber); }
+    .s-ceramic .stage-avatar { background: rgba(224, 122, 95, 0.25); color: var(--terracotta); }
+    .s-carbon .stage-avatar { background: rgba(139, 92, 246, 0.25); color: var(--purple); }
+    .s-clean .stage-avatar { background: rgba(16, 185, 129, 0.25); color: var(--emerald); }
+
+    .stage-item-card h3 {
+      font-family: var(--font-title);
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .stage-item-card .stage-role-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.25;
+    }
+
+    .stage-pill-tag {
+      font-family: var(--font-code);
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: inline-block;
+      color: var(--text-muted);
+    }
+
+    .pipe-connector-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pipe-track-bar {
+      width: 32px; height: 6px;
+      background: rgba(30, 41, 59, 0.9);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .pipe-track-bar::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      animation: flowPipe 1.4s infinite linear;
+    }
+
+    .pipe-connector-wrap i { font-size: 0.8rem; color: var(--cyan); margin-top: 3px; filter: drop-shadow(0 0 5px var(--cyan)); }
+
+    /* ACTUATOR INTERACTION BAR */
+    .actuator-flex-bar {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.2fr;
+      gap: 10px;
+    }
+
+    .actuator-box {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.76rem;
+    }
+
+    .actuator-box strong { color: #f8fafc; font-family: var(--font-code); }
+
+    .btn-acoustic-clean {
+      background: linear-gradient(135deg, rgba(224, 122, 95, 0.25), rgba(217, 119, 6, 0.35));
+      border: 1px solid var(--terracotta);
+      color: #ffedd5;
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.25s;
+    }
+
+    .btn-acoustic-clean:hover {
+      background: var(--terracotta);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(224, 122, 95, 0.5);
+    }
+
+    /* ==========================================================
+       3. 4 LIVE SENSOR CARDS & 4. AI ANALYSIS + NEURAL NET
+       ========================================================== */
+    .telemetry-ai-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .sensor-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .sensor-box-v3 {
+      padding: 18px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .sensor-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .sensor-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sensor-ico-circ {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+
+    .ico-tds { background: rgba(56, 189, 248, 0.18); color: var(--cyan); }
+    .ico-ph { background: rgba(168, 85, 247, 0.18); color: #c084fc; }
+    .ico-turbidity { background: rgba(245, 158, 11, 0.18); color: var(--amber); }
+    .ico-temp { background: rgba(224, 122, 95, 0.2); color: var(--terracotta); }
+
+    .sensor-name-h4 {
+      font-family: var(--font-title);
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .sensor-sub-txt { font-size: 0.72rem; color: var(--text-dim); }
+
+    .status-tag-v3 {
+      font-family: var(--font-code);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tag-normal { background: rgba(16, 185, 129, 0.16); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.45); }
+    .tag-warning { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.45); }
+    .tag-danger { background: rgba(244, 63, 94, 0.16); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.45); }
+
+    .sensor-readout-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .sensor-num-val {
+      font-family: var(--font-title);
+      font-size: 2.25rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .sensor-unit-lbl {
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .sensor-meter-track {
+      width: 100%; height: 6px;
+      background: rgba(30, 41, 59, 0.85);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .sensor-meter-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.4s ease;
+    }
+
+    .sensor-bottom-guideline {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-family: var(--font-code);
+    }
+
+    /* 4. AI WATER QUALITY ANALYSIS PANEL */
+    .ai-brain-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      background: linear-gradient(155deg, rgba(26, 19, 52, 0.9) 0%, rgba(13, 21, 38, 0.95) 100%);
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(139, 92, 246, 0.2);
+    }
+
+    .ai-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .ai-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ai-brain-avatar {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.35rem;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    }
+
+    .ai-brand-group h2 {
+      font-family: var(--font-title);
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .ai-brand-group .ai-sub-lbl {
+      font-size: 0.72rem;
+      color: #c4b5fd;
+      font-family: var(--font-code);
+    }
+
+    /* AI Score Ring & Verdict Hero */
+    .ai-score-hero-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .score-ring-wrap {
+      position: relative;
+      width: 94px; height: 94px;
+      flex-shrink: 0;
+    }
+
+    .score-svg-circ {
+      transform: rotate(-90deg);
+      width: 94px; height: 94px;
+    }
+
+    .score-circ-bg { fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 8; }
+    .score-circ-val {
+      fill: none;
+      stroke: var(--emerald);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 251.2;
+      stroke-dashoffset: 20.1;
+      transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease;
+      filter: drop-shadow(0 0 8px currentColor);
+    }
+
+    .score-center-txt {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .score-center-txt .score-bold {
+      font-family: var(--font-title);
+      font-size: 1.55rem;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .score-center-txt .score-wqi-lbl {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      font-family: var(--font-code);
+      font-weight: 700;
+    }
+
+    .verdict-info-col { flex: 1; }
+    .verdict-info-col .verdict-tag-pre {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+
+    .verdict-info-col .verdict-status-title {
+      font-family: var(--font-title);
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--emerald);
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .verdict-info-col .verdict-desc-txt {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    /* Live Neural Synapse Graph Canvas */
+    .neural-net-card {
+      background: rgba(10, 16, 30, 0.75);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #neuralNetCanvas {
+      width: 100%;
+      height: 70px;
+    }
+
+    /* AI Advice Cards */
+    .ai-advice-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .advice-item {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .advice-item i { font-size: 1.1rem; margin-top: 2px; }
+    .advice-item.rec i { color: var(--cyan); }
+    .advice-item.filter i { color: var(--terracotta); }
+
+    .advice-item h4 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .advice-item p { font-size: 0.8rem; color: #f1f5f9; line-height: 1.35; }
+
+    .ai-stream-ticker-bar {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-family: var(--font-code);
+      font-size: 0.72rem;
+      color: #a78bfa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================
+       5. INTERACTIVE MULTI-SOURCE WATER MATRIX & SIMULATION LAB
+       ========================================================== */
+    .sim-matrix-panel {
+      padding: 22px;
+      margin-bottom: 22px;
+    }
+
+    .sim-headline-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .source-buttons-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .btn-source {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: var(--text-main);
+      padding: 9px 15px;
+      border-radius: 12px;
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-source:hover {
+      transform: translateY(-2px);
+      border-color: var(--cyan);
+      box-shadow: 0 6px 18px rgba(0, 242, 254, 0.25);
+    }
+
+    .btn-source.b-pure { border-color: rgba(16, 185, 129, 0.45); }
+    .btn-source.b-pure:hover { background: rgba(16, 185, 129, 0.25); border-color: var(--emerald); }
+
+    .btn-source.b-poor { border-color: rgba(244, 63, 94, 0.45); }
+    .btn-source.b-poor:hover { background: rgba(244, 63, 94, 0.25); border-color: var(--rose); }
+
+    .btn-source.b-river { border-color: rgba(245, 158, 11, 0.45); }
+    .btn-source.b-river:hover { background: rgba(245, 158, 11, 0.25); border-color: var(--amber); }
+
+    .btn-source.b-borewell { border-color: rgba(56, 189, 248, 0.45); }
+    .btn-source.b-borewell:hover { background: rgba(56, 189, 248, 0.25); }
+
+    .btn-source.b-industry { border-color: rgba(168, 85, 247, 0.45); }
+    .btn-source.b-industry:hover { background: rgba(168, 85, 247, 0.25); }
+
+    .sliders-strip-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .slider-item-col label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .slider-item-col label span.slider-val-tag {
+      font-family: var(--font-code);
+      color: var(--cyan);
+      font-weight: 800;
+    }
+
+    .slider-item-col input[type=range] {
+      width: 100%; height: 6px;
+      background: #1e293b;
+      border-radius: 3px;
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+
+    .slider-item-col input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+      box-shadow: 0 0 12px var(--cyan);
+      transition: transform 0.15s ease;
+    }
+
+    .slider-item-col input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+    /* ==========================================================
+       6. FILTER STATUS & 7. TELEMETRY CHARTS + RADAR
+       ========================================================== */
+    .filter-chart-combo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    /* 6. FILTER HEALTH PANEL */
+    .filter-health-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .filter-rows-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .filter-row-item {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-row-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .filter-row-avatar {
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+
+    .filter-row-avatar.ceramic { background: rgba(224, 122, 95, 0.2); color: var(--terracotta); }
+    .filter-row-avatar.carbon { background: rgba(139, 92, 246, 0.2); color: var(--purple); }
+    .filter-row-avatar.maint { background: rgba(16, 185, 129, 0.2); color: var(--emerald); }
+
+    .filter-text-group h4 { font-size: 0.88rem; font-weight: 800; color: #ffffff; }
+    .filter-text-group p { font-size: 0.72rem; color: var(--text-dim); }
+
+    .filter-pill-badge {
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .maint-alert-box {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #34d399;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.35s ease;
+    }
+
+    .maint-alert-box.warning {
+      background: rgba(244, 63, 94, 0.15);
+      border-color: rgba(244, 63, 94, 0.45);
+      color: #fb7185;
+      animation: alertPulse 2s infinite;
+    }
+
+    /* 7. CHARTS & RADAR */
+    .chart-analytics-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-tabs-bar {
+      display: flex;
+      gap: 6px;
+    }
+
+    .chart-tab-btn {
+      background: rgba(30, 41, 59, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      font-family: var(--font-code);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chart-tab-btn.active, .chart-tab-btn:hover {
+      background: var(--cyan);
+      color: #04070f;
+      border-color: var(--cyan);
+    }
+
+    .dual-charts-wrap {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .chart-time-box { min-height: 225px; position: relative; }
+    .chart-radar-box {
+      min-height: 225px;
+      position: relative;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 14px;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* ==========================================================
+       8. SERIAL MONITOR + ROI CARBON CALCULATOR + HARDWARE
+       ========================================================== */
+    .serial-roi-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    /* SERIAL MONITOR */
+    .serial-monitor-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .serial-window {
+      background: #020408;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 12px;
+      padding: 12px;
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: #38bdf8;
+      height: 180px;
+      overflow-y: auto;
+      line-height: 1.6;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+      margin-bottom: 10px;
+    }
+
+    .serial-line { margin-bottom: 2px; }
+    .serial-line .ts { color: #64748b; margin-right: 6px; }
+    .serial-line .tag { color: var(--emerald); font-weight: 700; }
+    .serial-line .warn { color: var(--amber); }
+    .serial-line .err { color: var(--rose); font-weight: 700; }
+
+    .serial-controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ROI CALCULATOR */
+    .roi-impact-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .roi-slider-row {
+      margin-bottom: 14px;
+    }
+
+    .roi-slider-row label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .roi-stats-triple {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .roi-box {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .roi-box .r-val {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--emerald);
+    }
+
+    .roi-box .r-lbl { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+
+    /* HARDWARE SECTION */
+    .hardware-anatomy-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .hw-box-item {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 18px;
+      padding: 20px 16px;
+      text-align: center;
+      transition: all 0.35s ease;
+    }
+
+    .hw-box-item:hover {
+      transform: translateY(-5px);
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .hw-icon-avatar {
+      width: 70px; height: 70px;
+      margin: 0 auto 14px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.85rem;
+    }
+
+    .hw-box-item.pot .hw-icon-avatar { background: linear-gradient(135deg, rgba(224, 122, 95, 0.3), rgba(184, 80, 52, 0.45)); color: var(--terracotta); box-shadow: 0 0 25px rgba(224, 122, 95, 0.3); }
+    .hw-box-item.candle .hw-icon-avatar { background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(14, 116, 144, 0.45)); color: var(--cyan); box-shadow: 0 0 25px rgba(56, 189, 248, 0.3); }
+    .hw-box-item.carbon .hw-icon-avatar { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(109, 40, 217, 0.45)); color: var(--purple); box-shadow: 0 0 25px rgba(139, 92, 246, 0.3); }
+    .hw-box-item.sensors .hw-icon-avatar { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.45)); color: var(--emerald); box-shadow: 0 0 25px rgba(16, 185, 129, 0.3); }
+
+    .hw-box-item h3 { font-family: var(--font-title); font-size: 1rem; font-weight: 800; color: #ffffff; margin-bottom: 4px; }
+    .hw-box-item p { font-size: 0.76rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 12px; }
+
+    /* ==========================================================
+       AI CERAMIBOT CHAT FLOATING WIDGET
+       ========================================================== */
+    .chatbot-floating-toggle {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0284c7, #8b5cf6);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.5);
+      z-index: 99;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s;
+    }
+
+    .chatbot-floating-toggle:hover { transform: scale(1.1) rotate(5deg); }
+
+    .chatbot-drawer {
+      position: fixed;
+      bottom: 94px; right: 24px;
+      width: 360px; height: 480px;
+      background: #0d1526;
+      border: 1px solid var(--cyan);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8), var(--glow-cyan);
+      z-index: 100;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chatbot-drawer.open { display: flex; }
+
+    .chat-head {
+      padding: 14px 18px;
+      background: rgba(15, 23, 42, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-title { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.95rem; }
+    .chat-body { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem; }
+    .chat-bubble { padding: 10px 14px; border-radius: 14px; max-width: 85%; line-height: 1.4; }
+    .chat-bubble.bot { background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(56, 189, 248, 0.2); align-self: flex-start; color: #f1f5f9; }
+    .chat-bubble.user { background: var(--cyan); color: #04070f; align-self: flex-end; font-weight: 600; }
+
+    .chat-quick-suggestions {
+      padding: 6px 12px;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      background: rgba(8, 14, 26, 0.8);
+    }
+
+    .chat-chip {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.68rem;
+      white-space: nowrap;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .chat-chip:hover { background: var(--cyan); color: #000; }
+
+    .chat-input-row {
+      padding: 10px 14px;
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      background: #060a12;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: #fff;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .chat-send-btn {
+      background: var(--cyan);
+      border: none;
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      color: #04070f;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* FOOTER */
+    footer.app-footer-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .footer-btn {
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      font-size: 0.8rem;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .footer-btn:hover { color: var(--cyan); }
+
+    /* HACKATHON PITCH MODAL */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(4, 7, 15, 0.88);
+      backdrop-filter: blur(10px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.active { display: flex; }
+    .modal-box {
+      background: #0d1526;
+      border: 1px solid var(--cyan);
+      border-radius: 24px;
+      max-width: 740px;
+      width: 100%;
+      padding: 30px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.9), var(--glow-cyan);
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close-btn { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+
+    .spec-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.82rem; }
+    .spec-table th, .spec-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .spec-table th { color: var(--cyan); font-family: var(--font-title); }
+
+    /* KEYFRAME ANIMATIONS */
+    @keyframes pulseEmerald { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+    @keyframes pulseAmber { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+    @keyframes pulseRose { 0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); } }
+    @keyframes emblemPulse { 0% { filter: drop-shadow(0 0 10px rgba(0, 242, 254, 0.4)); } 100% { filter: drop-shadow(0 0 25px rgba(224, 122, 95, 0.6)); } }
+    @keyframes flowPipe { 0% { left: -100%; } 100% { left: 100%; } }
+    @keyframes alertPulse { 0%, 100% { background: rgba(244, 63, 94, 0.15); } 50% { background: rgba(244, 63, 94, 0.35); } }
+
+    /* RESPONSIVE */
+    @media (max-width: 1250px) {
+      .purification-hero-grid, .telemetry-ai-grid, .filter-chart-combo-grid, .serial-roi-grid { grid-template-columns: 1fr; }
+      .telemetry-banner { grid-template-columns: repeat(3, 1fr); }
+      .hardware-anatomy-grid { grid-template-columns: repeat(2, 1fr); }
+      .dual-charts-wrap { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      header.main-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .header-controls { width: 100%; justify-content: space-between; flex-wrap: wrap; }
+      .telemetry-banner { grid-template-columns: 1fr; }
+      .stage-boxes-flex { flex-direction: column; }
+      .pipe-connector-wrap { transform: rotate(90deg); margin: 8px 0; }
+      .sensor-cards-grid, .sliders-strip-grid, .hardware-anatomy-grid, .actuator-flex-bar { grid-template-columns: 1fr; }
+      .container { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- 1. HEADER & CONTROL DOCK -->
+    <header class="main-header glass-box">
+      <div class="branding-group">
+        <div class="logo-badge" onclick="triggerAudioChime('chime')" title="CeramiTech Logo">
+          <i class="fa-solid fa-droplet"></i>
+        </div>
+        <div class="title-area">
+          <h1 id="txtTitle">Smart AI-Powered Ceramic Water Purification System</h1>
+          <div class="sub-bar">
+            <span id="txtSubtitle">Traditional Clay Pot + Ceramic Micro-Filter + TinyML IoT Telemetry</span>
+            <span class="chip-badge clay">CLAY MATRIX</span>
+            <span class="chip-badge ai">TINYML EDGE</span>
+            <span class="chip-badge iot">ESP32 LoRaWAN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <!-- Ambience Water Audio Toggle -->
+        <button class="btn-dock" id="btnAmbienceToggle" onclick="toggleAmbienceAudio()" title="Water Flow Sound Ambience">
+          <i class="fa-solid fa-water"></i>
+          <span id="lblAmbience">Water Sound: OFF</span>
+        </button>
+
+        <!-- AI Voice Speech Toggle -->
+        <button class="btn-dock active" id="btnVoiceToggle" onclick="toggleVoiceSpeech()" title="Toggle Voice AI Speech">
+          <i class="fa-solid fa-volume-high"></i>
+          <span id="lblVoice">Voice AI: ON</span>
+        </button>
+
+        <!-- Language Switcher: EN / தமிழ் -->
+        <button class="btn-dock" id="btnLangToggle" onclick="toggleLanguage()" title="Switch Language">
+          <i class="fa-solid fa-language"></i>
+          <span id="lblLang">தமிழ்</span>
+        </button>
+
+        <!-- System Online Status Beacon -->
+        <div class="status-pill-live" id="systemBeacon">
+          <div class="pulse-core" id="beaconPulse"></div>
+          <span id="beaconStatusText">SYSTEM ONLINE</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- LIVE TELEMETRY STATS BANNER -->
+    <section class="telemetry-banner">
+      <div class="stat-card-mini glass-box">
+        <div class="stat-icon-circ water"><i class="fa-solid fa-glass-water"></i></div>
+        <div class="stat-data-col">
+          <div class="val" id="statPurified">23.4 L</div>
+          <div class="lbl" id="lblPurified">Purified Today</div>
+        </div>
+      </div>
+
+      <div class="stat-card-mini glass-box">
+        <div class="stat-icon-circ pot"><i class="fa-solid fa-snowflake"></i></div>
+        <div class="stat-data-col">
+          <div class="val" id="statPotCooling">21.4 °C</div>
+          <div class="lbl" id="lblPotCooling">Pot Eco-Cooled (-9.6°C)</div>
+        </div>
+      </div>
+
+      <div class="stat-card-mini glass-box">
+        <div class="stat-icon-circ flow"><i class="fa-solid fa-gauge-high"></i></div>
+        <div class="stat-data-col">
+          <div class="val" id="statFlowRate">2.4 L/h</div>
+          <div class="lbl" id="lblFlow">Gravity Flow Rate</div>
+        </div>
+      </div>
+
+      <div class="stat-card-mini glass-box">
+        <div class="stat-icon-circ valve"><i class="fa-solid fa-faucet" id="valveIcon"></i></div>
+        <div class="stat-data-col">
+          <div class="val" id="statSolenoid" style="color: var(--emerald);">OPEN</div>
+          <div class="lbl" id="lblSolenoid">AI Safe-Valve</div>
+        </div>
+      </div>
+
+      <div class="stat-card-mini glass-box">
+        <div class="stat-icon-circ solar"><i class="fa-solid fa-solar-panel"></i></div>
+        <div class="stat-data-col">
+          <div class="val">98.4%</div>
+          <div class="lbl">Solar Battery</div>
+        </div>
+      </div>
+
+      <div class="stat-card-mini glass-box">
+        <div class="stat-icon-circ ai"><i class="fa-solid fa-shield-virus"></i></div>
+        <div class="stat-data-col">
+          <div class="val">99.98%</div>
+          <div class="lbl" id="lblPathogens">Pathogen Removal</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. WATER PURIFICATION VISUALIZATION (CROSS-SECTION + 4-STAGE FLOW) -->
+    <div class="purification-hero-grid">
+      
+      <!-- 2A. PHYSICAL CERAMIC POT CUTAWAY & EXPLODED VIEW -->
+      <section class="glass-box pot-exploded-card">
+        <div class="headline-row" style="margin-bottom: 6px;">
+          <div class="headline-left">
+            <i class="fa-solid fa-jar"></i>
+            <span id="txtCrossSection">Eco-Pot Physical Cutaway</span>
+          </div>
+          <div class="pot-view-actions">
+            <button class="view-btn active" onclick="switchPotView('assembled', this)">Assembled</button>
+            <button class="view-btn" onclick="switchPotView('exploded', this)">Exploded 3D</button>
+          </div>
+        </div>
+
+        <div class="pot-svg-stage">
+          <svg class="pot-svg-canvas" id="potCutawaySvg" viewBox="0 0 340 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="55" cy="180" r="18" fill="url(#mistGlow)" opacity="0.4" />
+            <circle cx="285" cy="190" r="22" fill="url(#mistGlow)" opacity="0.4" />
+            
+            <!-- TOP RAW WATER CONTAINER -->
+            <g id="grpTopContainer" style="transition: transform 0.6s ease;">
+              <rect x="90" y="25" width="160" height="75" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="2.5" opacity="0.85"/>
+              <rect id="rawWaterFill" x="93" y="40" width="154" height="57" rx="6" fill="url(#rawWaterGrad)" opacity="0.8"/>
+              <text x="170" y="65" fill="#f8fafc" font-size="10" font-family="'Space Grotesk', sans-serif" font-weight="700" text-anchor="middle">RAW WATER CHAMBER</text>
+            </g>
+
+            <!-- CERAMIC FILTER CANDLE (0.2 Micron Porous Candle) -->
+            <g id="grpCandle" style="transition: transform 0.6s ease;">
+              <rect x="148" y="75" width="44" height="65" rx="6" fill="url(#ceramicCandleGrad)" stroke="#e07a5f" stroke-width="2"/>
+              <text x="170" y="105" fill="#ffffff" font-size="7.5" font-family="'JetBrains Mono', monospace" font-weight="700" text-anchor="middle">0.2µm CANDLE</text>
+              <text x="170" y="115" fill="#ffd8cc" font-size="6.5" font-family="'JetBrains Mono', monospace" text-anchor="middle">Ag+ SILVER</text>
+            </g>
+
+            <!-- ACTIVATED CARBON CORE -->
+            <g id="grpCarbon" style="transition: transform 0.6s ease;">
+              <rect x="154" y="120" width="32" height="20" rx="3" fill="#1e1b4b" stroke="#8b5cf6" stroke-width="1.5"/>
+              <text x="170" y="133" fill="#c4b5fd" font-size="6.5" font-family="'JetBrains Mono', monospace" text-anchor="middle">CARBON</text>
+            </g>
+
+            <!-- DRIPPING PARTICLES -->
+            <circle class="drip-p1" cx="170" cy="148" r="3.5" fill="#00f2fe"/>
+            <circle class="drip-p2" cx="170" cy="155" r="2.8" fill="#38bdf8"/>
+
+            <!-- BOTTOM TRADITIONAL CLAY POT -->
+            <g id="grpBottomPot" style="transition: transform 0.6s ease;">
+              <path d="M 100 155 Q 60 200 85 260 Q 120 285 170 285 Q 220 285 255 260 Q 280 200 240 155 Z" fill="url(#clayPotGrad)" stroke="#e07a5f" stroke-width="3"/>
+              <path d="M 94 205 Q 80 235 95 260 Q 125 280 170 280 Q 215 280 245 260 Q 260 235 246 205 Q 170 215 94 205 Z" fill="url(#cleanWaterGrad)" opacity="0.9"/>
+              <text x="170" y="245" fill="#ffffff" font-size="11" font-family="'Outfit', sans-serif" font-weight="800" text-anchor="middle">ECO-COOLED CLEAN WATER</text>
+              <text x="170" y="260" fill="#a7f3d0" font-size="8" font-family="'JetBrains Mono', monospace" font-weight="700" text-anchor="middle">POTABLE • MINERAL-RICH</text>
+              
+              <!-- IoT Probes Wire -->
+              <path d="M 235 125 L 235 220" stroke="#10b981" stroke-width="2.5" stroke-dasharray="3,2"/>
+              <circle cx="235" cy="220" r="4" fill="#10b981" />
+              <text x="278" y="222" fill="#34d399" font-size="8" font-family="'JetBrains Mono', monospace" font-weight="700">IoT Multi-Probe</text>
+            </g>
+
+            <defs>
+              <linearGradient id="rawWaterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#0284c7" stop-opacity="0.8"/>
+              </linearGradient>
+              <linearGradient id="ceramicCandleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fed7aa"/>
+                <stop offset="100%" stop-color="#ea580c"/>
+              </linearGradient>
+              <linearGradient id="clayPotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#b45309" stop-opacity="0.95"/>
+                <stop offset="50%" stop-color="#7c2d12" stop-opacity="0.95"/>
+                <stop offset="100%" stop-color="#451a03" stop-opacity="0.95"/>
+              </linearGradient>
+              <linearGradient id="cleanWaterGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.75"/>
+                <stop offset="100%" stop-color="#059669" stop-opacity="0.9"/>
+              </linearGradient>
+              <radialGradient id="mistGlow">
+                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#04070f" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="pot-footer-badges">
+          <div class="pot-badge-dot"><span class="dot-col" style="background:#f59e0b;"></span><span>1. Raw Intake</span></div>
+          <div class="pot-badge-dot"><span class="dot-col" style="background:#e07a5f;"></span><span>2. 0.2µm Candle</span></div>
+          <div class="pot-badge-dot"><span class="dot-col" style="background:#8b5cf6;"></span><span>3. Carbon Bed</span></div>
+          <div class="pot-badge-dot"><span class="dot-col" style="background:#10b981;"></span><span>4. Terracotta Pot</span></div>
+        </div>
+      </section>
+
+      <!-- 2B. 4-STAGE INTERACTIVE PROCESS DIAGRAM -->
+      <section class="glass-box flow-workflow-card">
+        <div>
+          <div class="headline-row">
+            <div class="headline-left">
+              <i class="fa-solid fa-diagram-project"></i>
+              <span id="txtWorkflowTitle">Water Purification Workflow (Real-Time Physics & IoT Monitoring)</span>
+            </div>
+            <span class="chip-badge iot">LIVE TELEMETRY</span>
+          </div>
+
+          <div class="flow-canvas-container">
+            <canvas id="waterFlowCanvas"></canvas>
+
+            <div class="stage-boxes-flex">
+              <!-- Stage 1 -->
+              <div class="stage-item-card s-raw" onclick="inspectStage('raw')">
+                <div class="stage-circ-num">1</div>
+                <div class="stage-avatar"><i class="fa-solid fa-faucet-drip"></i></div>
+                <h3 id="txtStage1">RAW WATER</h3>
+                <div class="stage-role-sub" id="txtStage1Desc">Untreated influent & turbidity capture</div>
+                <div class="stage-pill-tag" id="tagStage1">Turbidity: 0.8 NTU</div>
+              </div>
+
+              <div class="pipe-connector-wrap">
+                <div class="pipe-track-bar"></div>
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+
+              <!-- Stage 2 -->
+              <div class="stage-item-card s-ceramic" onclick="inspectStage('ceramic')">
+                <div class="stage-circ-num">2</div>
+                <div class="stage-avatar"><i class="fa-solid fa-cubes-stacked"></i></div>
+                <h3 id="txtStage2">CERAMIC FILTER</h3>
+                <div class="stage-role-sub" id="txtStage2Desc">0.2µm Micro-pore clay + silver ions</div>
+                <div class="stage-pill-tag" id="tagStage2">Pore: 0.2µm Nominal</div>
+              </div>
+
+              <div class="pipe-connector-wrap">
+                <div class="pipe-track-bar"></div>
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+
+              <!-- Stage 3 -->
+              <div class="stage-item-card s-carbon" onclick="inspectStage('carbon')">
+                <div class="stage-circ-num">3</div>
+                <div class="stage-avatar"><i class="fa-solid fa-filter"></i></div>
+                <h3 id="txtStage3">ACTIVATED CARBON</h3>
+                <div class="stage-role-sub" id="txtStage3Desc">Adsorption of VOCs, chlorine & odors</div>
+                <div class="stage-pill-tag" id="tagStage3">Adsorption: 94%</div>
+              </div>
+
+              <div class="pipe-connector-wrap">
+                <div class="pipe-track-bar"></div>
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+
+              <!-- Stage 4 -->
+              <div class="stage-item-card s-clean" onclick="inspectStage('clean')">
+                <div class="stage-circ-num">4</div>
+                <div class="stage-avatar"><i class="fa-solid fa-jar"></i></div>
+                <h3 id="txtStage4">CLEAN STORAGE</h3>
+                <div class="stage-role-sub" id="txtStage4Desc">Clay pot natural cooling & minerals</div>
+                <div class="stage-pill-tag" id="tagStage4">Status: Safe Potable</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actuators & Sonic Backwash button -->
+        <div class="actuator-flex-bar">
+          <div class="actuator-box">
+            <span>Flow Pulse:</span>
+            <strong id="actuatorPulse">24 Hz (Active)</strong>
+          </div>
+          <div class="actuator-box">
+            <span>Solenoid Valve:</span>
+            <strong id="actuatorValve" style="color: var(--emerald);">NORMAL FLOW</strong>
+          </div>
+          <div class="actuator-box">
+            <span>Silver Ion (Ag+):</span>
+            <strong id="actuatorSilver">0.02 ppm (Safe)</strong>
+          </div>
+          <button class="btn-acoustic-clean" onclick="runUltrasonicBackwash()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Acoustic Backwash</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 3. SENSORS & 4. AI WATER QUALITY ANALYSIS -->
+    <div class="telemetry-ai-grid">
+      
+      <!-- 3. 4 SENSOR CARDS -->
+      <section>
+        <div class="headline-row">
+          <div class="headline-left">
+            <i class="fa-solid fa-microchip"></i>
+            <span id="txtSensorsTitle">IoT Sensor Telemetry Nodes</span>
+          </div>
+          <span class="chip-badge iot">CALIBRATED PROBES</span>
+        </div>
+
+        <div class="sensor-cards-grid">
+          
+          <!-- SENSOR 1: TDS -->
+          <div class="glass-box sensor-box-v3" id="cardTds">
+            <div class="sensor-top-row">
+              <div class="sensor-meta-left">
+                <div class="sensor-ico-circ ico-tds"><i class="fa-solid fa-bolt"></i></div>
+                <div>
+                  <div class="sensor-name-h4" id="txtTdsName">TDS Sensor</div>
+                  <div class="sensor-sub-txt">Total Dissolved Solids</div>
+                </div>
+              </div>
+              <div class="status-tag-v3 tag-normal" id="tagTds">NORMAL</div>
+            </div>
+
+            <div class="sensor-readout-row">
+              <span class="sensor-num-val" id="valTds">142</span>
+              <span class="sensor-unit-lbl">ppm (mg/L)</span>
+            </div>
+
+            <div class="sensor-meter-track">
+              <div class="sensor-meter-fill" id="barTds" style="width: 28%; background-color: var(--cyan);"></div>
+            </div>
+
+            <div class="sensor-bottom-guideline">
+              <span>WHO Target: &lt;300 ppm</span>
+              <span id="txtTdsScale">Ideal Mineral Balance</span>
+            </div>
+          </div>
+
+          <!-- SENSOR 2: pH -->
+          <div class="glass-box sensor-box-v3" id="cardPh">
+            <div class="sensor-top-row">
+              <div class="sensor-meta-left">
+                <div class="sensor-ico-circ ico-ph"><i class="fa-solid fa-vial"></i></div>
+                <div>
+                  <div class="sensor-name-h4" id="txtPhName">pH Sensor</div>
+                  <div class="sensor-sub-txt">Acidity / Alkalinity Balance</div>
+                </div>
+              </div>
+              <div class="status-tag-v3 tag-normal" id="tagPh">NORMAL</div>
+            </div>
+
+            <div class="sensor-readout-row">
+              <span class="sensor-num-val" id="valPh">7.4</span>
+              <span class="sensor-unit-lbl">pH Units</span>
+            </div>
+
+            <div class="sensor-meter-track">
+              <div class="sensor-meter-fill" id="barPh" style="width: 53%; background-color: #c084fc;"></div>
+            </div>
+
+            <div class="sensor-bottom-guideline">
+              <span>Optimal: 6.5 - 8.5</span>
+              <span id="txtPhScale">Neutral & Slightly Alkaline</span>
+            </div>
+          </div>
+
+          <!-- SENSOR 3: Turbidity -->
+          <div class="glass-box sensor-box-v3" id="cardTurbidity">
+            <div class="sensor-top-row">
+              <div class="sensor-meta-left">
+                <div class="sensor-ico-circ ico-turbidity"><i class="fa-solid fa-eye-low-vision"></i></div>
+                <div>
+                  <div class="sensor-name-h4" id="txtTurbidityName">Turbidity Sensor</div>
+                  <div class="sensor-sub-txt">Nephelometric Optical Clarity</div>
+                </div>
+              </div>
+              <div class="status-tag-v3 tag-normal" id="tagTurbidity">NORMAL</div>
+            </div>
+
+            <div class="sensor-readout-row">
+              <span class="sensor-num-val" id="valTurbidity">0.8</span>
+              <span class="sensor-unit-lbl">NTU</span>
+            </div>
+
+            <div class="sensor-meter-track">
+              <div class="sensor-meter-fill" id="barTurbidity" style="width: 16%; background-color: var(--emerald);"></div>
+            </div>
+
+            <div class="sensor-bottom-guideline">
+              <span>WHO Guideline: &lt;5.0 NTU</span>
+              <span id="txtTurbidityScale">Pristine Crystal Clarity</span>
+            </div>
+          </div>
+
+          <!-- SENSOR 4: Temperature -->
+          <div class="glass-box sensor-box-v3" id="cardTemp">
+            <div class="sensor-top-row">
+              <div class="sensor-meta-left">
+                <div class="sensor-ico-circ ico-temp"><i class="fa-solid fa-temperature-half"></i></div>
+                <div>
+                  <div class="sensor-name-h4" id="txtTempName">Temperature Sensor</div>
+                  <div class="sensor-sub-txt">Pot Evaporative Thermal</div>
+                </div>
+              </div>
+              <div class="status-tag-v3 tag-normal" id="tagTemp">NORMAL</div>
+            </div>
+
+            <div class="sensor-readout-row">
+              <span class="sensor-num-val" id="valTemp">21.4</span>
+              <span class="sensor-unit-lbl">°C / 70.5°F</span>
+            </div>
+
+            <div class="sensor-meter-track">
+              <div class="sensor-meter-fill" id="barTemp" style="width: 42%; background-color: var(--terracotta);"></div>
+            </div>
+
+            <div class="sensor-bottom-guideline">
+              <span>Ambient: 31.0°C</span>
+              <span id="txtTempScale">-9.6°C Natural Evaporation</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. AI WATER QUALITY ANALYSIS PANEL -->
+      <section class="glass-box ai-brain-card" id="aiPanel">
+        <div>
+          <div class="ai-header-flex">
+            <div class="ai-brand-group">
+              <div class="ai-brain-avatar"><i class="fa-solid fa-brain"></i></div>
+              <div>
+                <h2 id="txtAiTitle">AI Water Quality Intelligence</h2>
+                <div class="ai-sub-lbl">TinyML WaterNet-X • Real-Time Edge Inferencing</div>
+              </div>
+            </div>
+            <span class="chip-badge ai" id="aiConfidenceBadge">
+              <i class="fa-solid fa-sparkles"></i> 99.4% CONFIDENCE
+            </span>
+          </div>
+
+          <!-- Score Ring & Status -->
+          <div class="ai-score-hero-card">
+            <div class="score-ring-wrap">
+              <svg class="score-svg-circ" viewBox="0 0 100 100">
+                <circle class="score-circ-bg" cx="50" cy="50" r="40"></circle>
+                <circle class="score-circ-val" id="aiRadialFill" cx="50" cy="50" r="40"></circle>
+              </svg>
+              <div class="score-center-txt">
+                <div class="score-bold" id="aiScoreDigit">96</div>
+                <div class="score-wqi-lbl">WQI / 100</div>
+              </div>
+            </div>
+
+            <div class="verdict-info-col">
+              <div class="verdict-tag-pre" id="lblVerdictPre">AI WATER QUALITY STATUS</div>
+              <div class="verdict-status-title" id="aiVerdictTitle">
+                <i class="fa-solid fa-circle-check" id="aiVerdictIcon"></i>
+                <span id="aiVerdictText">AI Status: GOOD</span>
+              </div>
+              <div class="verdict-desc-txt" id="aiConditionDesc">
+                Safe Potable Water: Natural minerals preserved, pristine optical clarity, and zero bio-hazard detected.
+              </div>
+            </div>
+          </div>
+
+          <!-- Live TinyML Neural Network Synapse Visualizer -->
+          <div class="neural-net-card">
+            <canvas id="neuralNetCanvas"></canvas>
+          </div>
+
+          <!-- AI Recommendation Items -->
+          <div class="ai-advice-stack">
+            <div class="advice-item rec">
+              <i class="fa-solid fa-lightbulb"></i>
+              <div>
+                <h4 id="lblAiRec">AI Recommendation</h4>
+                <p id="aiRecText">Water is 100% safe for direct drinking, infant preparation, and cooking without secondary boiling.</p>
+              </div>
+            </div>
+
+            <div class="advice-item filter">
+              <i class="fa-solid fa-shield-halved"></i>
+              <div>
+                <h4 id="lblFilterState">Filter Condition</h4>
+                <p id="aiFilterText">Ceramic candle pores unblocked. Carbon adsorption matrix operating at 94% optimal capacity.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-stream-ticker-bar">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span id="aiInferenceLog">Neural Feed: TDS(0.35) + pH(0.25) + Turbidity(0.30) + Temp(0.10) => Safe Output</span>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 5. INTERACTIVE MULTI-SOURCE SIMULATION LAB -->
+    <section class="sim-matrix-panel glass-box">
+      <div class="sim-headline-flex">
+        <div class="headline-row" style="margin-bottom: 0;">
+          <div class="headline-left">
+            <i class="fa-solid fa-sliders"></i>
+            <span id="txtSimTitle">Interactive Multi-Source Water Matrix & Stress Testing</span>
+          </div>
+        </div>
+
+        <!-- Live Sensor Jitter Switch -->
+        <div style="display: flex; align-items: center; gap: 10px; font-size: 0.78rem; font-family: var(--font-code); color: var(--text-muted);">
+          <span id="lblLiveStream">IoT Telemetry Jitter</span>
+          <label style="position: relative; display: inline-block; width: 38px; height: 20px;">
+            <input type="checkbox" id="chkLiveStream" checked onchange="toggleLiveJitter(this)" style="opacity:0; width:0; height:0;">
+            <span style="position: absolute; cursor: pointer; top:0; left:0; right:0; bottom:0; background-color:#334155; transition:.3s; border-radius:20px;"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Real-World Water Source Simulation Presets -->
+      <div class="source-buttons-grid">
+        <button class="btn-source b-pure" onclick="applyPreset('pure_spring')">
+          <i class="fa-solid fa-mountain" style="color: var(--emerald);"></i>
+          <span>Kodaikanal Mountain Spring (Pure)</span>
+        </button>
+        <button class="btn-source b-river" onclick="applyPreset('river')">
+          <i class="fa-solid fa-water" style="color: var(--amber);"></i>
+          <span>Cauvery / Vaigai River Silt</span>
+        </button>
+        <button class="btn-source b-borewell" onclick="applyPreset('borewell')">
+          <i class="fa-solid fa-arrow-down-up-across-line" style="color: var(--cyan);"></i>
+          <span>Hard Borewell Water (High TDS)</span>
+        </button>
+        <button class="btn-source b-poor" onclick="applyPreset('flood')">
+          <i class="fa-solid fa-cloud-showers-water" style="color: var(--rose);"></i>
+          <span>Monsoon Flood Mud Runoff</span>
+        </button>
+        <button class="btn-source b-industry" onclick="applyPreset('effluent')">
+          <i class="fa-solid fa-flask-vial" style="color: #c084fc;"></i>
+          <span>Industrial Acidic Effluent</span>
+        </button>
+        <button class="btn-source" onclick="applyPreset('reset')">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+          <span id="btnSimReset">Reset to Baseline</span>
+        </button>
+      </div>
+
+      <!-- Fine-Tuning Sliders -->
+      <div class="sliders-strip-grid">
+        <div class="slider-item-col">
+          <label>
+            <span>TDS Level</span>
+            <span class="slider-val-tag" id="readoutTds">142 ppm</span>
+          </label>
+          <input type="range" id="rangeTds" min="20" max="1200" value="142" oninput="onSliderChange('tds', this.value)" />
+        </div>
+
+        <div class="slider-item-col">
+          <label>
+            <span>pH Level</span>
+            <span class="slider-val-tag" id="readoutPh">7.4 pH</span>
+          </label>
+          <input type="range" id="rangePh" min="3.0" max="11.0" step="0.1" value="7.4" oninput="onSliderChange('ph', this.value)" />
+        </div>
+
+        <div class="slider-item-col">
+          <label>
+            <span>Turbidity Level</span>
+            <span class="slider-val-tag" id="readoutTurbidity">0.8 NTU</span>
+          </label>
+          <input type="range" id="rangeTurbidity" min="0.1" max="50.0" step="0.1" value="0.8" oninput="onSliderChange('turbidity', this.value)" />
+        </div>
+
+        <div class="slider-item-col">
+          <label>
+            <span>Temperature</span>
+            <span class="slider-val-tag" id="readoutTemp">21.4 °C</span>
+          </label>
+          <input type="range" id="rangeTemp" min="10.0" max="42.0" step="0.5" value="21.4" oninput="onSliderChange('temp', this.value)" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. FILTER STATUS & 7. CHART & RADAR ANALYTICS -->
+    <div class="filter-chart-combo-grid">
+      
+      <!-- 6. FILTER STATUS PANEL -->
+      <section class="glass-box filter-health-card">
+        <div>
+          <div class="headline-row">
+            <div class="headline-left">
+              <i class="fa-solid fa-filter-circle-dollar"></i>
+              <span id="txtFilterStatusTitle">Filter Lifecycle & Maintenance Diagnostics</span>
+            </div>
+            <span class="chip-badge clay">HEALTH MONITOR</span>
+          </div>
+
+          <div class="filter-rows-container">
+            <!-- Ceramic Filter -->
+            <div class="filter-row-item">
+              <div class="filter-row-meta">
+                <div class="filter-row-avatar ceramic"><i class="fa-solid fa-shapes"></i></div>
+                <div class="filter-text-group">
+                  <h4 id="txtCeramicFilterName">Ceramic Filter Candle</h4>
+                  <p>0.2µm Porous clay + silver ion membrane</p>
+                </div>
+              </div>
+              <div class="filter-pill-badge tag-normal" id="statusCeramic">GOOD (94%)</div>
+            </div>
+
+            <!-- Activated Carbon -->
+            <div class="filter-row-item">
+              <div class="filter-row-meta">
+                <div class="filter-row-avatar carbon"><i class="fa-solid fa-cubes"></i></div>
+                <div class="filter-text-group">
+                  <h4 id="txtCarbonName">Activated Carbon Core</h4>
+                  <p>High surface coconut-shell adsorbent matrix</p>
+                </div>
+              </div>
+              <div class="filter-pill-badge tag-normal" id="statusCarbon">GOOD (88%)</div>
+            </div>
+
+            <!-- Maintenance Status -->
+            <div class="filter-row-item">
+              <div class="filter-row-meta">
+                <div class="filter-row-avatar maint"><i class="fa-solid fa-wrench"></i></div>
+                <div class="filter-text-group">
+                  <h4 id="txtMaintName">System Maintenance</h4>
+                  <p>Acoustic flush & surface backwash status</p>
+                </div>
+              </div>
+              <div class="filter-pill-badge tag-normal" id="statusMaintenance">NOT REQUIRED</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="maint-alert-box" id="maintAlertBanner">
+          <i class="fa-solid fa-circle-check" id="maintAlertIcon"></i>
+          <span id="maintAlertText">All filtration cartridges are within nominal parameters. Flow resistance is optimal (2.4 L/h).</span>
+        </div>
+      </section>
+
+      <!-- 7. REAL-TIME CHARTS & WHO RADAR -->
+      <section class="glass-box chart-analytics-card">
+        <div class="headline-row" style="margin-bottom: 12px;">
+          <div class="headline-left">
+            <i class="fa-solid fa-chart-line"></i>
+            <span id="txtChartTitle">Real-Time Telemetry & WHO Compliance Radar</span>
+          </div>
+
+          <div class="chart-tabs-bar">
+            <button class="chart-tab-btn active" onclick="switchChartMetric('all', this)">All</button>
+            <button class="chart-tab-btn" onclick="switchChartMetric('tds', this)">TDS</button>
+            <button class="chart-tab-btn" onclick="switchChartMetric('ph', this)">pH</button>
+            <button class="chart-tab-btn" onclick="switchChartMetric('turbidity', this)">Turbidity</button>
+          </div>
+        </div>
+
+        <div class="dual-charts-wrap">
+          <div class="chart-time-box">
+            <canvas id="liveTelemetryChart"></canvas>
+          </div>
+          <div class="chart-radar-box">
+            <canvas id="waterSafetyRadarChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- 8. SERIAL MONITOR & ROI CARBON IMPACT CALCULATOR -->
+    <div class="serial-roi-grid">
+      
+      <!-- SERIAL TERMINAL -->
+      <section class="glass-box serial-monitor-card">
+        <div class="headline-row" style="margin-bottom: 10px;">
+          <div class="headline-left">
+            <i class="fa-solid fa-terminal"></i>
+            <span>ESP32 IoT Serial Monitor (115200 Baud)</span>
+          </div>
+          <span class="chip-badge iot">MQTT / LoRaWAN</span>
+        </div>
+
+        <div class="serial-window" id="serialConsole">
+          <div class="serial-line"><span class="ts">[13:30:00]</span> <span class="tag">[INFO]</span> ESP32-S3 Node Boot OK. Connected to TinyML Co-processor.</div>
+          <div class="serial-line"><span class="ts">[13:30:02]</span> <span class="tag">[MQTT]</span> Telemetry Packet: {"tds":142,"ph":7.4,"turb":0.8,"temp":21.4,"flow":2.4}</div>
+        </div>
+
+        <div class="serial-controls-row">
+          <span style="font-size: 0.72rem; color: var(--text-dim); font-family: var(--font-code);">RSSI: -68 dBm • Packet Loss: 0.0%</span>
+          <button class="btn-dock" onclick="clearSerialConsole()" style="padding: 4px 10px; font-size: 0.72rem;">Clear Terminal</button>
+        </div>
+      </section>
+
+      <!-- ROI & CARBON CALCULATOR -->
+      <section class="glass-box roi-impact-card">
+        <div>
+          <div class="headline-row" style="margin-bottom: 10px;">
+            <div class="headline-left">
+              <i class="fa-solid fa-leaf"></i>
+              <span>Eco-Impact & Annual Savings Calculator</span>
+            </div>
+            <span class="chip-badge clay">ZERO PLASTIC</span>
+          </div>
+
+          <div class="roi-slider-row">
+            <label>
+              <span>Family / Community Members:</span>
+              <strong style="color: var(--cyan); font-family: var(--font-code);" id="lblFamilySize">4 Persons</strong>
+            </label>
+            <input type="range" id="rangeFamily" min="1" max="15" value="4" oninput="updateRoiCalc(this.value)" style="width: 100%; height: 5px;" />
+          </div>
+
+          <div class="roi-stats-triple">
+            <div class="roi-box">
+              <div class="r-val" id="roiBottles">2,920</div>
+              <div class="r-lbl">Plastic Bottles Saved/Yr</div>
+            </div>
+            <div class="roi-box">
+              <div class="r-val" id="roiMoney">₹18,400</div>
+              <div class="r-lbl">Money Saved vs RO</div>
+            </div>
+            <div class="roi-box">
+              <div class="r-val" id="roiCarbon">146 kg</div>
+              <div class="r-lbl">CO₂ Emissions Cut</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 10px; font-family: var(--font-code);">
+          *Based on 2L/person daily drinking requirement vs 20L plastic bubble-top water cans.
+        </div>
+      </section>
+
+    </div>
+
+    <!-- HARDWARE SECTION -->
+    <section class="hardware-anatomy-grid">
+      <div class="hw-box-item pot glass-box">
+        <div class="hw-icon-avatar"><i class="fa-solid fa-jar"></i></div>
+        <h3>Traditional Clay Pot</h3>
+        <p>Crafted from natural terracotta earth. Delivers spontaneous 5°C - 9°C evaporative cooling without electricity or freon gas.</p>
+        <span class="chip-badge clay">100% Biodegradable</span>
+      </div>
+
+      <div class="hw-box-item candle glass-box">
+        <div class="hw-icon-avatar"><i class="fa-solid fa-layer-group"></i></div>
+        <h3>Ceramic Candle Filter</h3>
+        <p>Colloidal silver-impregnated micro-pore clay candle blocking 99.98% of bacteria, protozoa, and suspended mud particles.</p>
+        <span class="chip-badge iot">0.2µm Micro-Barrier</span>
+      </div>
+
+      <div class="hw-box-item carbon glass-box">
+        <div class="hw-icon-avatar"><i class="fa-solid fa-cubes"></i></div>
+        <h3>Activated Carbon Core</h3>
+        <p>High surface-area coconut shell carbon that adsorbs heavy metals, pesticides, residual chlorine, and eliminates foul odors.</p>
+        <span class="chip-badge ai">Chemical Adsorption</span>
+      </div>
+
+      <div class="hw-box-item sensors glass-box">
+        <div class="hw-icon-avatar"><i class="fa-solid fa-network-wired"></i></div>
+        <h3>Edge AI + IoT Suite</h3>
+        <p>Ultra-low power ESP32 MCU with TDS, pH, optical turbidity, and temp probes, executing on-device TinyML inferencing.</p>
+        <span class="chip-badge iot">ESP32 + TinyML</span>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="app-footer-bar">
+      <div>
+        <strong>Smart AI-Powered Ceramic Water Purification System</strong> • Hackathon Finalist Prototype
+      </div>
+      <div class="footer-actions">
+        <button class="footer-btn" onclick="openHackathonPitchModal()">
+          <i class="fa-solid fa-chalkboard-user"></i> <span>Pitch Deck & Spec Comparison</span>
+        </button>
+        <button class="footer-btn" onclick="generateWaterAuditReport()">
+          <i class="fa-solid fa-file-pdf"></i> <span>Download Water Safety Certificate</span>
+        </button>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- FLOATING AI CERAMIBOT CHAT WIDGET -->
+  <div class="chatbot-floating-toggle" onclick="toggleChatDrawer()" title="Ask CeramiBot AI">
+    <i class="fa-solid fa-robot"></i>
+  </div>
+
+  <div class="chatbot-drawer" id="chatDrawer">
+    <div class="chat-head">
+      <div class="chat-title">
+        <i class="fa-solid fa-brain" style="color: var(--cyan);"></i>
+        <span>CeramiBot AI Assistant</span>
+      </div>
+      <button onclick="toggleChatDrawer()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.1rem;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <div class="chat-body" id="chatMessages">
+      <div class="chat-bubble bot">
+        Hello! I'm CeramiBot AI. Ask me anything about our smart clay pot filter, water potability score, or how our TinyML algorithm works!
+      </div>
+    </div>
+
+    <div class="chat-quick-suggestions">
+      <span class="chat-chip" onclick="quickAsk('Is this water safe to drink?')">Is water safe?</span>
+      <span class="chat-chip" onclick="quickAsk('How does the pot cool water?')">How cooling works?</span>
+      <span class="chat-chip" onclick="quickAsk('When should I clean the filter?')">Clean filter?</span>
+    </div>
+
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Ask AI a question..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+      <button class="chat-send-btn" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <!-- HACKATHON PITCH MODAL -->
+  <div class="modal-backdrop" id="pitchModal">
+    <div class="modal-box">
+      <button class="modal-close-btn" onclick="closeHackathonPitchModal()"><i class="fa-solid fa-xmark"></i></button>
+      
+      <div class="headline-row" style="margin-bottom: 12px;">
+        <div class="headline-left">
+          <i class="fa-solid fa-award"></i>
+          <span>Hackathon Pitch: Innovation, Impact & Feasibility</span>
+        </div>
+      </div>
+
+      <p style="font-size: 0.86rem; color: #cbd5e1; line-height: 1.6; margin-bottom: 16px;">
+        <strong>The Global Problem:</strong> 2.2 billion people lack safely managed drinking water. Reverse Osmosis purifiers waste 70% of intake water, strip minerals, and demand high electrical power.
+      </p>
+
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>CeramiTech AI (Our Solution)</th>
+            <th>Commercial RO</th>
+            <th>Boiling</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Energy Use</strong></td>
+            <td style="color: #34d399;">Zero Power (Gravity + Solar IoT)</td>
+            <td>High (50W - 100W)</td>
+            <td>LPG / Firewood</td>
+          </tr>
+          <tr>
+            <td><strong>Mineral Retention</strong></td>
+            <td style="color: #34d399;">100% Natural Ca, Mg preserved</td>
+            <td>Strips all minerals</td>
+            <td>Preserved</td>
+          </tr>
+          <tr>
+            <td><strong>Cooling Effect</strong></td>
+            <td style="color: #34d399;">Natural 6°C - 9°C Clay cooling</td>
+            <td>None (Needs Fridge)</td>
+            <td>Hot / Ambient</td>
+          </tr>
+          <tr>
+            <td><strong>AI Contamination Alert</strong></td>
+            <td style="color: #34d399;">TinyML Edge Real-Time Alert</td>
+            <td>None</td>
+            <td>None</td>
+          </tr>
+          <tr>
+            <td><strong>Unit Cost</strong></td>
+            <td style="color: #34d399;">&lt; ₹1,200 ($14.50)</td>
+            <td>₹12,000 - ₹25,000</td>
+            <td>Recurring Fuel Cost</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="font-size: 0.84rem; color: #94a3b8; line-height: 1.5; margin-bottom: 18px;">
+        <strong>Market Feasibility:</strong> Ideal for rural households, flood relief camps, schools, and eco-homes. 100% biodegradable clay and zero microplastics.
+      </div>
+
+      <div style="text-align: right;">
+        <button class="btn-dock active" onclick="closeHackathonPitchModal()" style="display: inline-flex;">Close Pitch Deck</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT MASTER LOGIC -->
+  <script>
+    /* ==========================================================
+       1. GLOBAL APPLICATION STATE
+       ========================================================== */
+    const state = {
+      tds: 142,
+      ph: 7.4,
+      turbidity: 0.8,
+      temp: 21.4,
+      liveJitter: true,
+      voiceEnabled: true,
+      ambienceAudio: false,
+      lang: 'en',
+      chartMode: 'all',
+      purifiedLiters: 23.4,
+      potView: 'assembled',
+      historyLength: 18
+    };
+
+    const chartData = {
+      labels: [],
+      tds: [],
+      ph: [],
+      turbidity: []
+    };
+
+    let telemetryChart = null;
+    let radarChart = null;
+    let liveInterval = null;
+    let audioCtx = null;
+    let ambienceSource = null;
+
+    /* ==========================================================
+       2. WEB AUDIO API SYNTHESIS (CHIMES, ALARMS & DRIPS)
+       ========================================================== */
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function triggerAudioChime(type) {
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        if (type === 'chime') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+          gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.4);
+        } else if (type === 'alert') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(300, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(800, ctx.currentTime + 0.3);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.6);
+        } else if (type === 'sonic') {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(1200, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(2400, ctx.currentTime + 0.8);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 1.2);
+        }
+      } catch(e) {
+        console.log("Audio not allowed yet");
+      }
+    }
+
+    function toggleAmbienceAudio() {
+      state.ambienceAudio = !state.ambienceAudio;
+      const btn = document.getElementById('btnAmbienceToggle');
+      const lbl = document.getElementById('lblAmbience');
+      if (state.ambienceAudio) {
+        btn.classList.add('active');
+        lbl.textContent = "Water Sound: ON";
+        startWaterAmbienceLoop();
+      } else {
+        btn.classList.remove('active');
+        lbl.textContent = "Water Sound: OFF";
+      }
+    }
+
+    function startWaterAmbienceLoop() {
+      if (!state.ambienceAudio) return;
+      triggerAudioChime('chime');
+      setTimeout(startWaterAmbienceLoop, 3000 + Math.random() * 2000);
+    }
+
+    /* ==========================================================
+       3. FLUID PARTICLE DYNAMICS CANVAS
+       ========================================================== */
+    const canvas = document.getElementById('waterFlowCanvas');
+    const fCtx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class StreamParticle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * 30;
+        this.y = canvas.height * (0.35 + Math.random() * 0.3);
+        this.size = Math.random() * 3 + 2;
+        this.speed = Math.random() * 2 + 2.5;
+        this.opacity = Math.random() * 0.6 + 0.4;
+      }
+      update() {
+        this.x += this.speed;
+        this.prog = this.x / canvas.width;
+        if (this.x > canvas.width) this.reset();
+      }
+      draw() {
+        fCtx.beginPath();
+        fCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        if (this.prog < 0.25) {
+          fCtx.fillStyle = (state.turbidity > 5 || state.tds > 400) ? `rgba(245, 158, 11, ${this.opacity*0.8})` : `rgba(14, 165, 233, ${this.opacity*0.6})`;
+        } else if (this.prog < 0.5) {
+          fCtx.fillStyle = `rgba(224, 122, 95, ${this.opacity*0.8})`;
+        } else if (this.prog < 0.75) {
+          fCtx.fillStyle = `rgba(139, 92, 246, ${this.opacity*0.8})`;
+        } else {
+          fCtx.fillStyle = `rgba(0, 242, 254, ${this.opacity})`;
+        }
+        fCtx.shadowBlur = 8;
+        fCtx.shadowColor = fCtx.fillStyle;
+        fCtx.fill();
+        fCtx.shadowBlur = 0;
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(Math.floor(canvas.width / 18), 65);
+      for (let i = 0; i < count; i++) {
+        const p = new StreamParticle();
+        p.x = Math.random() * canvas.width;
+        particles.push(p);
+      }
+    }
+
+    function animateParticles() {
+      fCtx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let p of particles) {
+        p.update();
+        p.draw();
+      }
+      requestAnimationFrame(animateParticles);
+    }
+
+    /* ==========================================================
+       4. NEURAL NETWORK SYNAPSE GRAPH VISUALIZER
+       ========================================================== */
+    const nCanvas = document.getElementById('neuralNetCanvas');
+    const nCtx = nCanvas.getContext('2d');
+    let neuralTick = 0;
+
+    function resizeNeuralCanvas() {
+      nCanvas.width = nCanvas.parentElement.clientWidth;
+      nCanvas.height = 70;
+    }
+    window.addEventListener('resize', resizeNeuralCanvas);
+
+    function drawNeuralNet() {
+      nCtx.clearRect(0, 0, nCanvas.width, nCanvas.height);
+      neuralTick += 0.05;
+
+      const layers = [
+        { count: 4, name: 'In', x: 20 },
+        { count: 6, name: 'H1', x: nCanvas.width * 0.35 },
+        { count: 5, name: 'H2', x: nCanvas.width * 0.65 },
+        { count: 3, name: 'Out', x: nCanvas.width - 25 }
+      ];
+
+      // Draw connections
+      for (let l = 0; l < layers.length - 1; l++) {
+        const l1 = layers[l];
+        const l2 = layers[l + 1];
+        for (let i = 0; i < l1.count; i++) {
+          const y1 = 12 + (i * (nCanvas.height - 24)) / (l1.count - 1 || 1);
+          for (let j = 0; j < l2.count; j++) {
+            const y2 = 12 + (j * (nCanvas.height - 24)) / (l2.count - 1 || 1);
+            const pulse = (Math.sin(neuralTick + i + j + l) + 1) / 2;
+            nCtx.beginPath();
+            nCtx.moveTo(l1.x, y1);
+            nCtx.lineTo(l2.x, y2);
+            nCtx.strokeStyle = `rgba(139, 92, 246, ${0.1 + pulse * 0.25})`;
+            nCtx.lineWidth = 1;
+            nCtx.stroke();
+          }
+        }
+      }
+
+      // Draw Neurons
+      for (let l = 0; l < layers.length; l++) {
+        const layer = layers[l];
+        for (let i = 0; i < layer.count; i++) {
+          const y = 12 + (i * (nCanvas.height - 24)) / (layer.count - 1 || 1);
+          nCtx.beginPath();
+          nCtx.arc(layer.x, y, 4, 0, Math.PI * 2);
+          if (l === 0) nCtx.fillStyle = '#00f2fe';
+          else if (l === layers.length - 1) nCtx.fillStyle = '#10b981';
+          else nCtx.fillStyle = '#c4b5fd';
+          nCtx.fill();
+        }
+      }
+
+      requestAnimationFrame(drawNeuralNet);
+    }
+
+    /* ==========================================================
+       5. TINYML WATER QUALITY ENGINE
+       ========================================================== */
+    function evaluateWaterQualityAI(tds, ph, turbidity, temp) {
+      let score = 100;
+      let issues = [];
+      let status = "GOOD";
+      let statusColor = "var(--emerald)";
+      let pulseState = "normal";
+
+      // TDS
+      if (tds <= 250) {
+        score -= (Math.abs(150 - tds) / 150) * 5;
+      } else if (tds <= 500) {
+        score -= ((tds - 250) / 250) * 18;
+        issues.push("Elevated dissolved minerals");
+      } else if (tds <= 800) {
+        score -= 35 + ((tds - 500) / 300) * 20;
+        issues.push("High TDS (>500 ppm)");
+      } else {
+        score -= 60 + Math.min(30, (tds - 800) / 10);
+        issues.push("Excessive dissolved solids (>800 ppm)");
+      }
+
+      // pH
+      if (ph >= 6.8 && ph <= 7.8) {
+      } else if ((ph >= 6.2 && ph < 6.8) || (ph > 7.8 && ph <= 8.5)) {
+        score -= 10;
+        issues.push(ph < 6.8 ? "Mildly acidic" : "Mildly alkaline");
+      } else {
+        const phDiff = Math.abs(ph - 7.0);
+        score -= Math.min(45, phDiff * 16);
+        issues.push(ph < 6.2 ? "Corrosive Acidic Water (pH < 6.2)" : "Strongly Alkaline Water (pH > 8.5)");
+      }
+
+      // Turbidity
+      if (turbidity <= 1.0) {
+      } else if (turbidity <= 5.0) {
+        score -= (turbidity / 5.0) * 12;
+      } else if (turbidity <= 15.0) {
+        score -= 25 + ((turbidity - 5.0) / 10.0) * 20;
+        issues.push("High suspended silt / turbidity");
+      } else {
+        score -= 50 + Math.min(40, (turbidity - 15.0) * 1.5);
+        issues.push("Severe Muddy Contamination");
+      }
+
+      score = Math.max(8, Math.min(99, Math.round(score)));
+
+      let condition = "";
+      let recommendation = "";
+      let filterCondition = "";
+      let solenoid = "OPEN";
+
+      if (score >= 80) {
+        status = "GOOD";
+        statusColor = "var(--emerald)";
+        condition = state.lang === 'ta' ? "குடிப்பதற்கு உகந்த பாதுகாப்பான நீர்: இயற்கை தாதுக்கள் நிறைந்து தெளிவான தரத்தில் உள்ளது." : "Safe Potable Water: Natural minerals preserved, pristine optical clarity, and zero bio-hazard detected.";
+        recommendation = state.lang === 'ta' ? "நேரடியாக குடிக்கலாம், சமைக்கலாம். கொதிக்க வைக்க வேண்டிய அவசியமில்லை." : "Water is 100% safe for direct drinking, infant preparation, and cooking without secondary boiling.";
+        filterCondition = state.lang === 'ta' ? "பீங்கான் வடிகட்டி மற்றும் கரி அடுக்கு சிறந்த முறையில் செயல்படுகிறது." : "Ceramic candle pores unblocked. Carbon adsorption matrix operating at 94% optimal capacity.";
+        pulseState = "normal";
+        solenoid = "OPEN";
+      } else if (score >= 58) {
+        status = "WARNING";
+        statusColor = "var(--amber)";
+        condition = state.lang === 'ta' ? `மிதமான நீர் தரம்: ${issues.join(", ")}. வடிகட்டியில் வண்டல் படிந்துள்ளது.` : `Marginal Water Quality: ${issues.join(", ")}. Elevated particulate load.`;
+        recommendation = state.lang === 'ta' ? "குழந்தைகளுக்கு கொதிக்க வைத்து வழங்கவும். வடிகட்டியை கழுவ பரிந்துரைக்கப்படுகிறது." : "Secondary boiling advised for infants. Inspect filter candle for sediment accumulation.";
+        filterCondition = state.lang === 'ta' ? "பீங்கான் வடிகட்டியில் வண்டல் படிந்துள்ளது. 48 மணி நேரத்தில் கழுவவும்." : "Ceramic membrane under medium load. Surface backwash recommended within 48h.";
+        pulseState = "warning";
+        solenoid = "OPEN (MONITORED)";
+      } else {
+        status = "POOR";
+        statusColor = "var(--rose)";
+        condition = state.lang === 'ta' ? `ஆபத்தான நீர்: ${issues.join("; ")}. குடிப்பதற்கு உகந்ததல்ல!` : `Contaminated Influent: ${issues.join("; ")}. Critical biological or chemical risk detected.`;
+        recommendation = state.lang === 'ta' ? "குடிக்க வேண்டாம்! அவசரமாக பீங்கான் வடிகட்டியை கழுவி சுத்தம் செய்யவும்." : "DO NOT DRINK DIRECTLY. Urgent manual backwash of ceramic candle & carbon cartridge purge required.";
+        filterCondition = state.lang === 'ta' ? "எச்சரிக்கை: வடிகட்டி துளைகளில் அதிக வண்டல் அடைப்பு ஏற்பட்டுள்ளது." : "CRITICAL: Heavy sediment pore clogging detected on outer ceramic filter surface.";
+        pulseState = "danger";
+        solenoid = "AUTO-SHUTOFF (CLOSED)";
+      }
+
+      return { score, status, statusColor, condition, recommendation, filterCondition, solenoid, pulseState };
+    }
+
+    /* ==========================================================
+       6. UI RENDERING & VOICE ENGINE
+       ========================================================== */
+    let lastAnnouncedStatus = "";
+
+    function updateDashboardUI() {
+      // 1. Readouts
+      document.getElementById('valTds').textContent = Math.round(state.tds);
+      document.getElementById('valPh').textContent = state.ph.toFixed(1);
+      document.getElementById('valTurbidity').textContent = state.turbidity.toFixed(1);
+      document.getElementById('valTemp').textContent = state.temp.toFixed(1);
+
+      document.getElementById('readoutTds').textContent = Math.round(state.tds) + ' ppm';
+      document.getElementById('readoutPh').textContent = state.ph.toFixed(1) + ' pH';
+      document.getElementById('readoutTurbidity').textContent = state.turbidity.toFixed(1) + ' NTU';
+      document.getElementById('readoutTemp').textContent = state.temp.toFixed(1) + ' °C';
+
+      document.getElementById('rangeTds').value = state.tds;
+      document.getElementById('rangePh').value = state.ph;
+      document.getElementById('rangeTurbidity').value = state.turbidity;
+      document.getElementById('rangeTemp').value = state.temp;
+
+      // 2. Bar Levels
+      updateSensorBar('Tds', state.tds, 0, 1000, state.tds <= 300 ? 'normal' : state.tds <= 600 ? 'warning' : 'danger');
+      updateSensorBar('Ph', state.ph, 3.0, 11.0, (state.ph >= 6.5 && state.ph <= 8.5) ? 'normal' : (state.ph >= 5.5 && state.ph <= 9.2) ? 'warning' : 'danger');
+      updateSensorBar('Turbidity', state.turbidity, 0, 40, state.turbidity <= 3.0 ? 'normal' : state.turbidity <= 10.0 ? 'warning' : 'danger');
+      updateSensorBar('Temp', state.temp, 10, 40, state.temp <= 28 ? 'normal' : 'warning');
+
+      // 3. AI Inference
+      const ai = evaluateWaterQualityAI(state.tds, state.ph, state.turbidity, state.temp);
+
+      document.getElementById('aiScoreDigit').textContent = ai.score;
+      const radial = document.getElementById('aiRadialFill');
+      const circumference = 2 * Math.PI * 40;
+      radial.style.strokeDashoffset = circumference - (ai.score / 100) * circumference;
+      radial.style.stroke = ai.statusColor;
+
+      const verdictTitle = document.getElementById('aiVerdictText');
+      verdictTitle.textContent = state.lang === 'ta' ? `AI நிலை: ${ai.status}` : `AI Status: ${ai.status}`;
+      verdictTitle.style.color = ai.statusColor;
+
+      const verdictIcon = document.getElementById('aiVerdictIcon');
+      verdictIcon.className = ai.status === 'GOOD' ? "fa-solid fa-circle-check" : (ai.status === 'WARNING' ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-circle-xmark");
+      verdictIcon.style.color = ai.statusColor;
+
+      document.getElementById('aiConditionDesc').textContent = ai.condition;
+      document.getElementById('aiRecText').textContent = ai.recommendation;
+      document.getElementById('aiFilterText').textContent = ai.filterCondition;
+
+      // Solenoid Valve Display
+      const valTxt = document.getElementById('statSolenoid');
+      const valIco = document.getElementById('valveIcon');
+      const actVal = document.getElementById('actuatorValve');
+
+      if (ai.status === 'POOR') {
+        valTxt.textContent = "SHUTOFF";
+        valTxt.style.color = "var(--rose)";
+        valIco.style.color = "var(--rose)";
+        actVal.textContent = "CUTOFF ACTIVATED";
+        actVal.style.color = "var(--rose)";
+      } else {
+        valTxt.textContent = "OPEN";
+        valTxt.style.color = "var(--emerald)";
+        valIco.style.color = "var(--emerald)";
+        actVal.textContent = "NORMAL FLOW";
+        actVal.style.color = "var(--emerald)";
+      }
+
+      // Filter Maintenance
+      const ceramicPill = document.getElementById('statusCeramic');
+      const carbonPill = document.getElementById('statusCarbon');
+      const maintPill = document.getElementById('statusMaintenance');
+      const maintBanner = document.getElementById('maintAlertBanner');
+      const maintBannerText = document.getElementById('maintAlertText');
+      const maintBannerIcon = document.getElementById('maintAlertIcon');
+
+      if (ai.status === 'GOOD') {
+        ceramicPill.textContent = "GOOD (94%)";
+        ceramicPill.className = "filter-pill-badge tag-normal";
+        carbonPill.textContent = "GOOD (88%)";
+        carbonPill.className = "filter-pill-badge tag-normal";
+        maintPill.textContent = "NOT REQUIRED";
+        maintPill.className = "filter-pill-badge tag-normal";
+        maintBanner.className = "maint-alert-box";
+        maintBannerIcon.className = "fa-solid fa-circle-check";
+        maintBannerText.textContent = state.lang === 'ta' ? "அனைத்து வடிகட்டிகளும் உகந்த நிலையில் உள்ளன. பராமரிப்பு தேவையில்லை." : "All filtration cartridges are within nominal parameters. Flow resistance is optimal (2.4 L/h).";
+      } else if (ai.status === 'WARNING') {
+        ceramicPill.textContent = "MONITOR (71%)";
+        ceramicPill.className = "filter-pill-badge tag-warning";
+        carbonPill.textContent = "GOOD (82%)";
+        carbonPill.className = "filter-pill-badge tag-normal";
+        maintPill.textContent = "CHECK SOON";
+        maintPill.className = "filter-pill-badge tag-warning";
+        maintBanner.className = "maint-alert-box warning";
+        maintBannerIcon.className = "fa-solid fa-triangle-exclamation";
+        maintBannerText.textContent = state.lang === 'ta' ? "எச்சரிக்கை: அதிக வண்டல் படிந்துள்ளது. வடிகட்டி மேற்பரப்பை கழுவ தயார் செய்யவும்." : "Warning: Higher sediment load detected. Prepare for ceramic candle surface rinse.";
+      } else {
+        ceramicPill.textContent = "MAINTENANCE REQUIRED";
+        ceramicPill.className = "filter-pill-badge tag-danger";
+        carbonPill.textContent = "HEAVY LOAD (45%)";
+        carbonPill.className = "filter-pill-badge tag-warning";
+        maintPill.textContent = "ACTION REQUIRED";
+        maintPill.className = "filter-pill-badge tag-danger";
+        maintBanner.className = "maint-alert-box warning";
+        maintBannerIcon.className = "fa-solid fa-triangle-exclamation";
+        maintBannerText.textContent = state.lang === 'ta' ? "⚠️ அவசர எச்சரிக்கை: வடிகட்டியில் அடைப்பு ஏற்பட்டுள்ளது! உடனடியாக கழுவவும்." : "⚠️ MAINTENANCE ALERT: Severe pore fouling detected! Scour ceramic filter candle & purge system immediately.";
+      }
+
+      // Beacon
+      const beaconPulse = document.getElementById('beaconPulse');
+      const beaconStatusText = document.getElementById('beaconStatusText');
+      beaconPulse.className = `pulse-core ${ai.pulseState}`;
+      if (ai.status === 'GOOD') {
+        beaconStatusText.textContent = "SYSTEM ONLINE";
+        beaconStatusText.style.color = "#34d399";
+      } else if (ai.status === 'WARNING') {
+        beaconStatusText.textContent = "SYSTEM WARNING";
+        beaconStatusText.style.color = "#fbbf24";
+      } else {
+        beaconStatusText.textContent = "WATER CONTAMINATED";
+        beaconStatusText.style.color = "#fb7185";
+      }
+
+      // Pot Delta
+      const delta = (31.0 - state.temp).toFixed(1);
+      document.getElementById('statPotCooling').textContent = `${state.temp.toFixed(1)} °C`;
+      document.getElementById('lblPotCooling').textContent = `Pot Eco-Cooled (-${delta}°C)`;
+      document.getElementById('tagStage1').textContent = `Turbidity: ${state.turbidity.toFixed(1)} NTU`;
+      document.getElementById('tagStage4').textContent = ai.status === 'GOOD' ? 'Status: Potable' : (ai.status === 'WARNING' ? 'Status: Marginal' : 'Status: Treatment Needed');
+
+      const conf = (98.0 + (ai.score % 2) * 0.8).toFixed(1);
+      document.getElementById('aiConfidenceBadge').innerHTML = `<i class="fa-solid fa-sparkles"></i> ${conf}% CONFIDENCE`;
+      document.getElementById('aiInferenceLog').textContent = `Neural Feed: TDS(${Math.round(state.tds)}) + pH(${state.ph.toFixed(1)}) + Turbidity(${state.turbidity.toFixed(1)} NTU) => Output: ${ai.status} (WQI ${ai.score})`;
+
+      // Voice trigger
+      if (state.voiceEnabled && lastAnnouncedStatus !== ai.status) {
+        speakAIAnnouncement(ai.status);
+        lastAnnouncedStatus = ai.status;
+      }
+
+      updateRadarChart(ai.score);
+      logSerialTelemetry(ai);
+    }
+
+    function updateSensorBar(name, val, min, max, level) {
+      const tag = document.getElementById(`tag${name}`);
+      if (tag) {
+        tag.textContent = level.toUpperCase();
+        tag.className = `status-tag-v3 tag-${level}`;
+      }
+      const bar = document.getElementById(`bar${name}`);
+      if (bar) {
+        const pct = Math.min(100, Math.max(5, ((val - min) / (max - min)) * 100));
+        bar.style.width = pct + '%';
+        bar.style.backgroundColor = level === 'normal' ? (name === 'Ph' ? '#c084fc' : (name === 'Temp' ? 'var(--terracotta)' : 'var(--emerald)')) : (level === 'warning' ? 'var(--amber)' : 'var(--rose)');
+      }
+    }
+
+    /* ==========================================================
+       7. WEB SPEECH AI VOICE ASSISTANT
+       ========================================================== */
+    function speakAIAnnouncement(status) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+
+      let message = "";
+      if (status === 'GOOD') {
+        message = state.lang === 'ta' ? "நீர் தரம் மிகச் சிறப்பாக உள்ளது. இயற்கை தாதுக்கள் நிறைந்து குடிப்பதற்கு உகந்தது." : "Water quality optimal. AI Water Quality Status is Good. Clean water is safe for direct consumption.";
+      } else if (status === 'WARNING') {
+        message = state.lang === 'ta' ? "எச்சரிக்கை! நீர் தரம் மிதமாக உள்ளது. வடிகட்டியை ஆய்வு செய்யவும்." : "Warning. Water quality degradation detected. Sediment accumulation on ceramic filter.";
+      } else {
+        message = state.lang === 'ta' ? "அபாயம்! நீர் மாசடைந்துள்ளது. தானியங்கி வால்வு நிறுத்தப்பட்டது. குடிக்க வேண்டாம்!" : "Emergency Alert. Severe contamination detected. Solenoid safety valve shutoff activated. Water unsafe for drinking.";
+        triggerAudioChime('alert');
+      }
+
+      const utterance = new SpeechSynthesisUtterance(message);
+      utterance.rate = 1.0;
+      utterance.pitch = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function toggleVoiceSpeech() {
+      state.voiceEnabled = !state.voiceEnabled;
+      const btn = document.getElementById('btnVoiceToggle');
+      const lbl = document.getElementById('lblVoice');
+      if (state.voiceEnabled) {
+        btn.classList.add('active');
+        lbl.textContent = "Voice AI: ON";
+      } else {
+        btn.classList.remove('active');
+        lbl.textContent = "Voice AI: OFF";
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      }
+    }
+
+    /* ==========================================================
+       8. MULTI-SOURCE SIMULATION PRESETS
+       ========================================================== */
+    function applyPreset(preset) {
+      if (preset === 'pure_spring') {
+        state.tds = 120; state.ph = 7.4; state.turbidity = 0.5; state.temp = 19.5;
+      } else if (preset === 'river') {
+        state.tds = 340; state.ph = 7.2; state.turbidity = 18.5; state.temp = 24.0;
+      } else if (preset === 'borewell') {
+        state.tds = 840; state.ph = 8.3; state.turbidity = 2.4; state.temp = 22.0;
+      } else if (preset === 'flood') {
+        state.tds = 680; state.ph = 6.4; state.turbidity = 44.0; state.temp = 25.5;
+      } else if (preset === 'effluent') {
+        state.tds = 1120; state.ph = 3.9; state.turbidity = 28.0; state.temp = 29.0;
+      } else if (preset === 'reset') {
+        state.tds = 142; state.ph = 7.4; state.turbidity = 0.8; state.temp = 21.4;
+      }
+
+      updateDashboardUI();
+      pushTelemetryData();
+    }
+
+    function onSliderChange(param, val) {
+      state[param] = parseFloat(val);
+      updateDashboardUI();
+    }
+
+    function toggleLiveJitter(chk) {
+      state.liveJitter = chk.checked;
+    }
+
+    /* ==========================================================
+       9. ACOUSTIC ULTRASONIC BACKWASH SIMULATION
+       ========================================================== */
+    function runUltrasonicBackwash() {
+      triggerAudioChime('sonic');
+      alert("ACOUSTIC BACKWASH ACTIVATED:\nUltrasonic transducer firing at 40 kHz. Micro-cavitation bubbles scouring the outer ceramic pore walls. Filter health restored to 100%!");
+      document.getElementById('statusCeramic').textContent = "GOOD (100%)";
+      document.getElementById('statusCeramic').className = "filter-pill-badge tag-normal";
+      document.getElementById('statusMaintenance').textContent = "COMPLETED";
+    }
+
+    /* ==========================================================
+       10. POT 3D / EXPLODED VIEW SWITCHER
+       ========================================================== */
+    function switchPotView(view, btn) {
+      state.potView = view;
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const grpTop = document.getElementById('grpTopContainer');
+      const grpCandle = document.getElementById('grpCandle');
+      const grpCarbon = document.getElementById('grpCarbon');
+      const grpPot = document.getElementById('grpBottomPot');
+
+      if (view === 'exploded') {
+        grpTop.style.transform = 'translateY(-28px)';
+        grpCandle.style.transform = 'translateY(-12px) scale(1.05)';
+        grpCarbon.style.transform = 'translateY(8px) scale(1.1)';
+        grpPot.style.transform = 'translateY(24px)';
+      } else {
+        grpTop.style.transform = 'translateY(0)';
+        grpCandle.style.transform = 'translateY(0) scale(1)';
+        grpCarbon.style.transform = 'translateY(0) scale(1)';
+        grpPot.style.transform = 'translateY(0)';
+      }
+    }
+
+    /* ==========================================================
+       11. CHARTS & RADAR INITIALIZATION
+       ========================================================== */
+    function initCharts() {
+      const lineCtx = document.getElementById('liveTelemetryChart').getContext('2d');
+      const now = new Date();
+      for (let i = state.historyLength; i >= 0; i--) {
+        const time = new Date(now.getTime() - i * 3000);
+        chartData.labels.push(time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+        chartData.tds.push(140 + Math.sin(i) * 5);
+        chartData.ph.push(7.35 + Math.cos(i) * 0.08);
+        chartData.turbidity.push(0.78 + Math.sin(i * 0.5) * 0.12);
+      }
+
+      telemetryChart = new Chart(lineCtx, {
+        type: 'line',
+        data: {
+          labels: chartData.labels,
+          datasets: [
+            { label: 'TDS (ppm / 10)', data: chartData.tds.map(v => v / 10), borderColor: '#00f2fe', backgroundColor: 'rgba(0, 242, 254, 0.08)', borderWidth: 2.2, tension: 0.35, fill: true, pointRadius: 2 },
+            { label: 'pH Level', data: chartData.ph, borderColor: '#c084fc', backgroundColor: 'rgba(192, 132, 252, 0.08)', borderWidth: 2.2, tension: 0.35, fill: true, pointRadius: 2 },
+            { label: 'Turbidity (NTU)', data: chartData.turbidity, borderColor: '#f59e0b', backgroundColor: 'rgba(245, 158, 11, 0.08)', borderWidth: 2.2, tension: 0.35, fill: true, pointRadius: 2 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { family: "'Space Grotesk', sans-serif", size: 11 } } },
+            tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.95)', borderColor: 'rgba(56, 189, 248, 0.3)', borderWidth: 1 }
+          },
+          scales: {
+            x: { grid: { color: 'rgba(255, 255, 255, 0.04)' }, ticks: { color: '#64748b', font: { size: 9, family: "'JetBrains Mono', monospace" } } },
+            y: { grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#64748b', font: { size: 10, family: "'JetBrains Mono', monospace" } } }
+          }
+        }
+      });
+
+      const radarCtx = document.getElementById('waterSafetyRadarChart').getContext('2d');
+      radarChart = new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+          labels: ['Clarity', 'pH Balance', 'Minerals', 'Pathogen Removal', 'Odor', 'Cooling Delta'],
+          datasets: [
+            { label: 'Purified Water', data: [96, 95, 92, 99, 94, 98], backgroundColor: 'rgba(16, 185, 129, 0.25)', borderColor: '#10b981', pointBackgroundColor: '#10b981', pointBorderColor: '#fff' },
+            { label: 'WHO Minimum', data: [80, 80, 75, 85, 80, 70], backgroundColor: 'rgba(56, 189, 248, 0.1)', borderColor: 'rgba(56, 189, 248, 0.5)', borderDash: [4, 4], pointRadius: 0 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#94a3b8', font: { size: 10 } } } },
+          scales: {
+            r: {
+              angleLines: { color: 'rgba(255, 255, 255, 0.08)' },
+              grid: { color: 'rgba(255, 255, 255, 0.08)' },
+              pointLabels: { color: '#cbd5e1', font: { size: 9.5, family: "'Space Grotesk', sans-serif" } },
+              ticks: { display: false, min: 0, max: 100 }
+            }
+          }
+        }
+      });
+    }
+
+    function pushTelemetryData() {
+      if (!telemetryChart) return;
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+      chartData.labels.push(timeStr);
+      chartData.tds.push(state.tds);
+      chartData.ph.push(state.ph);
+      chartData.turbidity.push(state.turbidity);
+
+      if (chartData.labels.length > state.historyLength) {
+        chartData.labels.shift();
+        chartData.tds.shift();
+        chartData.ph.shift();
+        chartData.turbidity.shift();
+      }
+
+      telemetryChart.data.labels = chartData.labels;
+      if (state.chartMode === 'all') {
+        telemetryChart.data.datasets[0].data = chartData.tds.map(v => v / 10);
+        telemetryChart.data.datasets[1].data = chartData.ph;
+        telemetryChart.data.datasets[2].data = chartData.turbidity;
+      } else if (state.chartMode === 'tds') {
+        telemetryChart.data.datasets[0].data = chartData.tds;
+      } else if (state.chartMode === 'ph') {
+        telemetryChart.data.datasets[1].data = chartData.ph;
+      } else if (state.chartMode === 'turbidity') {
+        telemetryChart.data.datasets[2].data = chartData.turbidity;
+      }
+      telemetryChart.update();
+    }
+
+    function updateRadarChart(wqiScore) {
+      if (!radarChart) return;
+      const clarity = Math.max(10, Math.min(100, Math.round(100 - state.turbidity * 2.2)));
+      const ph = Math.max(10, Math.min(100, Math.round(100 - Math.abs(7.4 - state.ph) * 22)));
+      const mineral = state.tds <= 300 ? 94 : Math.max(15, 100 - (state.tds - 300) / 8);
+      const pathogen = state.turbidity > 15 || state.tds > 700 ? 45 : 99;
+      const cooling = Math.min(100, Math.max(40, Math.round((31.0 - state.temp) * 11)));
+
+      radarChart.data.datasets[0].data = [clarity, ph, mineral, pathogen, 92, cooling];
+      radarChart.data.datasets[0].borderColor = wqiScore < 60 ? '#f43f5e' : (wqiScore < 80 ? '#f59e0b' : '#10b981');
+      radarChart.data.datasets[0].backgroundColor = wqiScore < 60 ? 'rgba(244, 63, 94, 0.25)' : (wqiScore < 80 ? 'rgba(245, 158, 11, 0.25)' : 'rgba(16, 185, 129, 0.25)');
+      radarChart.update();
+    }
+
+    function switchChartMetric(mode, btn) {
+      state.chartMode = mode;
+      document.querySelectorAll('.chart-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (!telemetryChart) return;
+      if (mode === 'all') {
+        telemetryChart.data.datasets[0].hidden = false;
+        telemetryChart.data.datasets[1].hidden = false;
+        telemetryChart.data.datasets[2].hidden = false;
+        telemetryChart.data.datasets[0].label = 'TDS (ppm / 10)';
+        telemetryChart.data.datasets[0].data = chartData.tds.map(v => v / 10);
+      } else if (mode === 'tds') {
+        telemetryChart.data.datasets[0].hidden = false;
+        telemetryChart.data.datasets[1].hidden = true;
+        telemetryChart.data.datasets[2].hidden = true;
+        telemetryChart.data.datasets[0].label = 'TDS (ppm)';
+        telemetryChart.data.datasets[0].data = chartData.tds;
+      } else if (mode === 'ph') {
+        telemetryChart.data.datasets[0].hidden = true;
+        telemetryChart.data.datasets[1].hidden = false;
+        telemetryChart.data.datasets[2].hidden = true;
+      } else if (mode === 'turbidity') {
+        telemetryChart.data.datasets[0].hidden = true;
+        telemetryChart.data.datasets[1].hidden = true;
+        telemetryChart.data.datasets[2].hidden = false;
+      }
+      telemetryChart.update();
+    }
+
+    /* ==========================================================
+       12. SERIAL MONITOR STREAMING & ROI LOGIC
+       ========================================================= */
+    function logSerialTelemetry(ai) {
+      const consoleBox = document.getElementById('serialConsole');
+      if (!consoleBox) return;
+      const now = new Date();
+      const ts = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const line = document.createElement('div');
+      line.className = 'serial-line';
+
+      if (ai.status === 'POOR') {
+        line.innerHTML = `<span class="ts">[${ts}]</span> <span class="err">[ALERT]</span> SOLENOID CUTOFF! TDS=${Math.round(state.tds)}, pH=${state.ph.toFixed(1)}, Turb=${state.turbidity.toFixed(1)} NTU`;
+      } else if (ai.status === 'WARNING') {
+        line.innerHTML = `<span class="ts">[${ts}]</span> <span class="warn">[WARN]</span> Marginal Inflow: WQI=${ai.score}, Filter_Load=High`;
+      } else {
+        line.innerHTML = `<span class="ts">[${ts}]</span> <span class="tag">[TELEMETRY]</span> Packet OK: WQI=${ai.score}, Pot_Temp=${state.temp.toFixed(1)}C, Valve=OPEN`;
+      }
+
+      consoleBox.appendChild(line);
+      if (consoleBox.children.length > 25) consoleBox.removeChild(consoleBox.firstChild);
+      consoleBox.scrollTop = consoleBox.scrollHeight;
+    }
+
+    function clearSerialConsole() {
+      document.getElementById('serialConsole').innerHTML = `<div class="serial-line"><span class="ts">[INFO]</span> Serial terminal cleared. Ready for next packet.</div>`;
+    }
+
+    function updateRoiCalc(persons) {
+      document.getElementById('lblFamilySize').textContent = `${persons} Persons`;
+      const bottles = persons * 730;
+      const money = persons * 4600;
+      const carbon = persons * 36.5;
+      document.getElementById('roiBottles').textContent = bottles.toLocaleString();
+      document.getElementById('roiMoney').textContent = `₹${money.toLocaleString()}`;
+      document.getElementById('roiCarbon').textContent = `${Math.round(carbon)} kg`;
+    }
+
+    /* ==========================================================
+       13. FLOATING AI CERAMIBOT CHAT ASSISTANT
+       ========================================================== */
+    function toggleChatDrawer() {
+      document.getElementById('chatDrawer').classList.toggle('open');
+    }
+
+    function quickAsk(q) {
+      document.getElementById('chatInput').value = q;
+      sendChatMessage();
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const body = document.getElementById('chatMessages');
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user';
+      userBubble.textContent = text;
+      body.appendChild(userBubble);
+      input.value = '';
+
+      // AI Response Knowledge Base
+      setTimeout(() => {
+        let reply = "";
+        const lower = text.toLowerCase();
+        if (lower.includes('safe') || lower.includes('drink')) {
+          const ai = evaluateWaterQualityAI(state.tds, state.ph, state.turbidity, state.temp);
+          reply = `Current WQI is ${ai.score}/100 (${ai.status}). ${ai.recommendation}`;
+        } else if (lower.includes('cool') || lower.includes('temperature') || lower.includes('how')) {
+          reply = "The traditional clay pot naturally cools water through micro-pore capillary evaporation. Latent heat of vaporization drops water temperature by 6°C to 9.5°C without electricity!";
+        } else if (lower.includes('clean') || lower.includes('filter') || lower.includes('maintenance')) {
+          reply = "The 0.2µm ceramic candle can be easily scrubbed with a brush or cleaned using our 1-click Acoustic Ultrasonic Backwash button to restore 100% pore throughput.";
+        } else {
+          reply = `CeramiTech AI combines ancient Indian terracotta pottery with 0.2-micron colloidal silver filtration and ESP32 TinyML edge intelligence to purify water for under ₹1,200!`;
+        }
+
+        const botBubble = document.createElement('div');
+        botBubble.className = 'chat-bubble bot';
+        botBubble.textContent = reply;
+        body.appendChild(botBubble);
+        body.scrollTop = body.scrollHeight;
+      }, 500);
+    }
+
+    /* ==========================================================
+       14. LANGUAGE TOGGLE & AUDIT CERTIFICATE
+       ========================================================== */
+    function toggleLanguage() {
+      state.lang = state.lang === 'en' ? 'ta' : 'en';
+      document.getElementById('lblLang').textContent = state.lang === 'en' ? 'தமிழ்' : 'English';
+      updateDashboardUI();
+    }
+
+    function openHackathonPitchModal() { document.getElementById('pitchModal').classList.add('active'); }
+    function closeHackathonPitchModal() { document.getElementById('pitchModal').classList.remove('active'); }
+
+    function inspectStage(stage) {
+      const messages = {
+        raw: "STAGE 1: RAW WATER INTAKE\nCaptures rainwater, river water, or groundwater. Optical turbidity sensor detects coarse sediments before physical membrane contact.",
+        ceramic: "STAGE 2: 0.2µm CERAMIC CANDLE MEMBRANE\nMicro-porous fired clay blocks pathogens, cysts, and silt. Silver nanoparticle coating continuously neutralizes bacteria at the pore walls.",
+        carbon: "STAGE 3: ACTIVATED CARBON CORE\nCoconut shell carbon bed adsorbs organic chemical runoff, chlorine, odors, and heavy metals via high-surface van der Waals bonding.",
+        clean: "STAGE 4: TRADITIONAL CLAY POT RESERVOIR\nTerracotta micro-pores allow continuous evaporation cooling the water by 6-9°C while retaining calcium and magnesium electrolytes."
+      };
+      alert(messages[stage]);
+    }
+
+    function generateWaterAuditReport() {
+      const ai = evaluateWaterQualityAI(state.tds, state.ph, state.turbidity, state.temp);
+      const timestamp = new Date().toLocaleString();
+      const reportText = `
+=====================================================
+CERAMITECH AI • WATER QUALITY AUDIT CERTIFICATE
+=====================================================
+Report ID: CT-AI-${Math.floor(Math.random() * 899999 + 100000)}
+Timestamp: ${timestamp}
+System: Smart AI-Powered Ceramic Water Purification System
+
+SENSOR TELEMETRY READINGS:
+-----------------------------------------------------
+• Total Dissolved Solids (TDS) : ${Math.round(state.tds)} ppm (WHO Standard: <300 ppm)
+• pH Level                     : ${state.ph.toFixed(2)} pH (WHO Standard: 6.5 - 8.5)
+• Turbidity (Clarity)          : ${state.turbidity.toFixed(2)} NTU (WHO Standard: <5.0 NTU)
+• Pot Water Temperature        : ${state.temp.toFixed(1)} °C (Natural Eco-Cooling)
+
+AI WATER QUALITY EVALUATION:
+-----------------------------------------------------
+• Water Quality Index (WQI)    : ${ai.score} / 100
+• AI Verdict Status            : ${ai.status}
+• Potability Recommendation    : ${ai.recommendation}
+• Filter Integrity             : Ceramic Pores Nominal (0.2µm)
+=====================================================
+`;
+      const blob = new Blob([reportText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `CeramiTech_Water_Certificate_${Date.now()}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    /* ==========================================================
+       15. INITIALIZATION
+       ========================================================== */
+    window.addEventListener('DOMContentLoaded', () => {
+      initParticles();
+      animateParticles();
+      resizeNeuralCanvas();
+      drawNeuralNet();
+      initCharts();
+      updateDashboardUI();
+
+      // IoT Stream loop
+      setInterval(() => {
+        if (!state.liveJitter) return;
+        state.tds = Math.max(20, Math.min(1200, state.tds + (Math.random() - 0.5) * 3));
+        state.ph = Math.max(3.0, Math.min(11.0, state.ph + (Math.random() - 0.5) * 0.05));
+        state.turbidity = Math.max(0.1, Math.min(50.0, state.turbidity + (Math.random() - 0.5) * 0.08));
+        state.temp = Math.max(10.0, Math.min(40.0, state.temp + (Math.random() - 0.5) * 0.04));
+        state.purifiedLiters += 0.03;
+        document.getElementById('statPurified').textContent = state.purifiedLiters.toFixed(1) + ' L';
+
+        updateDashboardUI();
+        pushTelemetryData();
+      }, 2500);
+    });
+  </script>
+</body>
+</html>
